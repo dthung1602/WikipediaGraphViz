@@ -1,0 +1,6 @@
+venv
+todo.txt
+foo.*
+.*pyc
+__pycache__/
+.idea
