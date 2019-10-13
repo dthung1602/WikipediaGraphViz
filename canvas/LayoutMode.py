@@ -33,6 +33,7 @@ class LayoutMode(Mode):
         self.applyLayout()
 
     def onResetViewRect(self):
+        return
         g = self.canvas.g
         vsAttributes = g.vs.attributes()
 
@@ -60,10 +61,12 @@ class LayoutMode(Mode):
         g.vs['y'] = [y * scale for y in g.vs['y']]
 
     def backupInitXY(self):
+        pass
         self.onResetViewRect()
         self.initXY = {v: (v['x'], v['y']) for v in self.canvas.g.vs}
 
     def applyLayout(self):
+        return
         if self.layoutName == 'auto':
             for v in self.canvas.g.vs:
                 coor = self.initXY.get(v)

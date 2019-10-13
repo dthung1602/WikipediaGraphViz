@@ -1,8 +1,7 @@
 from abc import ABC
-from math import radians, pi, log, tan, isnan
 
-from PyQt5.QtCore import Qt, QRectF
-from PyQt5.QtGui import QPainter, QBrush, QPen, QImage, QColor
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPainter, QBrush, QPen, QColor
 
 from .Mode import Mode
 
@@ -68,64 +67,24 @@ class ViewMode(Mode, ABC):
 
 
 class DarkViewMode(ViewMode):
-    conflict_modes = ['LightViewMode', 'GeoViewMode']
+    conflict_modes = ['LightViewMode', 'GrayViewMode']
     backgroundBrush = QBrush(Qt.black)
     backgroundPen = QPen(Qt.black)
     foregroundBrush = QBrush(Qt.white)
     foregroundPen = QPen(Qt.white)
 
 
+class GrayViewMode(ViewMode):
+    conflict_modes = ['LightViewMode', 'DarkViewMode']
+    backgroundBrush = QBrush(Qt.gray)
+    backgroundPen = QPen(Qt.gray)
+    foregroundBrush = QBrush(Qt.white)
+    foregroundPen = QPen(Qt.white)
+
+
 class LightViewMode(ViewMode):
-    conflict_modes = ['DarkViewMode', 'GeoViewMode']
+    conflict_modes = ['DarkViewMode', 'GrayViewMode']
     backgroundBrush = QBrush(Qt.white)
     backgroundPen = QPen(Qt.white)
     foregroundBrush = QBrush(Qt.darkBlue)
     foregroundPen = QPen(Qt.black)
-
-
-class GeoViewMode(ViewMode):
-    conflict_modes = ['LightViewMode', 'DarkViewMode']
-    backgroundPen = QPen(Qt.black)
-    foregroundPen = QPen(Qt.black)
-    foregroundBrush = QBrush(Qt.green)
-
-    def __init__(self, gui):
-        super().__init__(gui)
-        self.backGroundImage = QImage('resource/gui/maptovl.png')
-        self.backgroundRect = None
-
-    def geolocationToXY(self, longitude, latitude):
-        x = (longitude + 180) * (self.canvas.WIDTH / 360)
-        latRad = radians(latitude)
-        mercN = log(tan((pi / 4) + (latRad / 2)))
-        y = (self.canvas.HEIGHT / 2) - (self.canvas.WIDTH * mercN / (2 * pi))
-        return x, y
-
-    def onResetViewRect(self):
-        for v in self.canvas.g.vs:
-            longitude = v['Longitude']
-            latitude = v['Latitude']
-            if isnan(longitude) or isnan(latitude):
-                v['x'] = self.canvas.WIDTH / 2
-                v['y'] = self.canvas.HEIGHT / 2 + 150
-            else:
-                x, y = self.geolocationToXY(longitude, latitude)
-                v['x'] = x
-                v['y'] = y + 150
-        return True
-
-    def onUpdateViewRect(self):
-        scale = self.backGroundImage.width() / self.canvas.WIDTH
-        self.backgroundRect = QRectF(
-            self.canvas.viewRect.x() * scale,
-            self.canvas.viewRect.y() * scale,
-            self.canvas.viewRect.width() * scale,
-            self.canvas.viewRect.height() * scale
-        )
-
-    def onPaintBegin(self, painter: QPainter):
-        painter.drawImage(
-            self.canvas.SCREEN_RECT,
-            self.backGroundImage,
-            self.backgroundRect
-        )

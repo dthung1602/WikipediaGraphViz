@@ -1,24 +1,39 @@
 import igraph
-from PIL import Image
 from PyQt5 import uic
 from PyQt5.QtCore import *
-from PyQt5.QtGui import QColor
-from PyQt5.QtGui import QPainter, QPixmap
+from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from igraph import Graph
 
 from canvas import *
 from .AboutUsDialog import AboutUsDialog
-from .AddAttributesDialog import AddAttributesDialog
-from .ConstraintDialog import ConstraintDialog
-from .FilterDialog import FilterDialog
-from .InfoWidget import EdgeInfoWidget, VertexInfoWidget
-from .RealTimeDialog import *
-from .ShortestPathWeightDialog import ShortestPathWeightDialog
-from .StatDialog import StatDialog
-from .utils import clearLayout
 
-DEFAULT_GRAPH = 'resource/graph/NREN.graphml'
+DEFAULT_GRAPH = igraph.Graph()
+
+COLOR_VERTEX_OPTIONS = [
+    ['Pagerank', 'pagerank'],
+    ['Closeness', 'closeness'],
+    ['Betweenness', 'betweenness'],
+    ['Eigenvector', 'evcent'],
+    ['Out degree', 'outdegree'],
+    ['In degree', 'indegree'],
+    ['Reference', 'reference'],
+    ['Image', 'image'],
+]
+
+FILTER_VERTEX_OPTIONS = [
+    ['Pagerank', 'pagerank'],
+    ['Closeness', 'closeness'],
+    ['Betweenness', 'betweenness'],
+    ['Eigenvector', 'evcent'],
+    ['Out degree', 'outdegree'],
+    ['In degree', 'indegree'],
+    ['Reference', 'reference'],
+    ['Image', 'image'],
+]
+
+RELATIVE_FILTERS = [
+    'pagerank', 'closeness', 'betweenness'
+]
 
 
 class MainWindow(QMainWindow):
@@ -28,201 +43,118 @@ class MainWindow(QMainWindow):
         uic.loadUi('resource/gui/GUI.ui', self)
 
         self.setWindowIcon(QIcon('resource/gui/icon.ico'))
-        self.setWindowTitle("Network Visualization - Team Black")
-        self.setWindowFlag(QtCore.Qt.WindowMaximizeButtonHint, False)
+        self.setWindowTitle("Wikipedia Graph Viz")
+        self.setWindowFlag(Qt.WindowMaximizeButtonHint, False)
 
-        self.canvas = Canvas(1129, 760)
-        self.findChild(QVBoxLayout, 'verticalLayout').addWidget(self.canvas)
+        self.canvas = Canvas(1129, 600)
+        # self.findChild(QVBoxLayout, 'canvasBox').addWidget(self.canvas)
 
         # Modes
         # 0
         self.darkMode = DarkViewMode(self)
+        self.grayMode = GrayViewMode(self)
         self.lightMode = LightViewMode(self)
-        self.geoMode = GeoViewMode(self)
         # 1
         self.editMode = EditMode(self)
         self.shortestPathMode = ShortestPathMode(self)
-        self.bottleNeckMode = BottleNeckMode(self)
         # 2
         self.layoutMode = LayoutMode(self)
         # 3
         self.clusterVerticesMode = ClusterVerticesMode(self)
         self.centralityMode = CentralityMode(self)
         self.vertexAttrColorMode = VertexAttrColorMode(self)
-        self.edgeAttrColorMode = EdgeAttrColorMode(self)
-        self.filterEdgeMode = FilterEdgeMode(self)
-        # 4
-        self.realTimeMode = RealTimeMode(self)
 
         defaultModes = [
             self.darkMode,
             self.editMode,
             self.layoutMode,
             self.clusterVerticesMode,
-            self.edgeAttrColorMode,
-            self.filterEdgeMode
         ]
-        for m in defaultModes:
-            self.canvas.addMode(m)
-        self.canvas.setGraph(DEFAULT_GRAPH)
+        # /for m in defaultModes:
+        #     self.canvas.addMode(m)
+        # self.canvas.setGraph(DEFAULT_GRAPH)
 
-        self.realTimeDialog = self.statDialog = self.filterDialog = None
+        self.absoluteRadio = self.relativeRadio = self.colorVertexComboBox = self.filterVertexComboBox = None
+        self.labels = [
+            'pageTitle', 'pageRank', 'pageID', 'pageInLinkCount', 'pageOutLinkCount',
+            'pageRefCount', 'pageImgCount', 'pageWordCount', 'pageCatCount', 'pageSummary',
+            'pageCount', 'linkCount', 'catCount', 'diameter', 'radius',
+            'density', 'avgOutDeg', 'avgInDeg', 'avgShortestPath'
+        ]
 
-        self.infoArea = self.findChild(QVBoxLayout, 'infoArea')
         self.bindMenuActions()
+        self.bindButtonActions()
+        self.initComboBoxes()
+        self.findLabels()
 
     def bindMenuActions(self):
         # ------------- Menu ---------------- #
         # File
-        # Open_button
-        openBtn = self.findChild(QAction, 'action_Open')
-        openBtn.triggered.connect(self.openFileNameDialog)
-        # Open_Image
-        openImageBtn = self.findChild(QAction, 'actionOpen_Image')
-        openImageBtn.triggered.connect(self.openImageToGraphDialog)
-        # Save_Image_button
-        saveImageBtn = self.findChild(QAction, 'actionSave_Image')
-        saveImageBtn.triggered.connect(self.saveImageDialog)
-        # Save_button
-        saveBtn = self.findChild(QAction, 'action_Save')
-        saveBtn.triggered.connect(self.saveFileDialog)
-        # Close_button
-        closeBtn = self.findChild(QAction, 'action_Close')
-        closeBtn.triggered.connect(self.close)
-        # New
-        newBtn = self.findChild(QAction, 'actionNew')
-        newBtn.triggered.connect(self.newGraph)
-        # About Us
-        aboutUsBtn = self.findChild(QAction, 'actionAboutUs')
-        aboutUsBtn.triggered.connect(self.aboutUsDialog)
+        self.findChild(QAction, 'actionNew').triggered.connect(self.handleNew)
+        self.findChild(QAction, 'actionOpen').triggered.connect(self.handleOpenFile)
+        self.findChild(QAction, 'actionSave').triggered.connect(self.handleSave)
+        self.findChild(QAction, 'actionSaveImage').triggered.connect(self.handleSaveImage)
+        self.findChild(QAction, 'actionClose').triggered.connect(self.close)
         # View
-        # Zoom in
-        self.findChild(QAction, 'actionZoom_In').triggered.connect(self.canvas.zoomInEvent)
-        # Zoom out
-        self.findChild(QAction, 'actionZoom_Out').triggered.connect(self.canvas.zoomOutEvent)
-        # Zoom reset
-        self.findChild(QAction, 'actionReset_Zoom').triggered.connect(self.canvas.zoomResetEvent)
-        # View mode
-        self.findChild(QAction, 'actionGeographical_Mode').triggered.connect(self.changeViewModeTo(GeoViewMode))
-        self.findChild(QAction, 'actionDark_Mode').triggered.connect(self.changeViewModeTo(DarkViewMode))
-        self.findChild(QAction, 'actionLight_Mode').triggered.connect(self.changeViewModeTo(LightViewMode))
-        # Add a Node
-        self.findChild(QAction, 'action_Add_nodes').triggered.connect(self.editMode.setAddVertex)
-        # Delete a node
-        self.findChild(QAction, 'actionDelete_a_Node').triggered.connect(self.editMode.setDeleteVertex)
-        # Add a Line
-        self.findChild(QAction, 'actionAdd_a_Line').triggered.connect(self.editMode.setAddEdge)
-        # Delete a Line
-        self.findChild(QAction, 'actionDelete_a_Line').triggered.connect(self.editMode.setDeleteEdge)
-        # Find shortest path
-        self.findChild(QAction, 'actionFind_shortest_path').triggered.connect(self.activateFindShortestPathMode)
-        # Edit mode
-        self.findChild(QAction, 'actionEdit_graph').triggered.connect(self.activateEditGraphMode)
-        # Chart mode
-        self.findChild(QAction, 'actionStatistical_Charts').triggered.connect(self.openStatDialog)
-        # Checking constraints
-        self.findChild(QAction, 'actionCheck_constraints').triggered.connect(self.openConstraintDialog)
-        # Add new attribute
-        self.findChild(QAction, 'actionAdd_a_new_attribute').triggered.connect(self.openAddAttributesDialog)
-        # Real time
-        self.findChild(QAction, 'action_Real_Time_Mode').triggered.connect(self.openRealTimeDialog)
-        # Window
-        # Minimize_button
-        self.findChild(QAction, 'action_Minimize').triggered.connect(self.minimizeWindow)
+        self.findChild(QAction, 'actionZoomIn').triggered.connect(self.canvas.zoomInEvent)
+        self.findChild(QAction, 'actionZoomOut').triggered.connect(self.canvas.zoomOutEvent)
+        self.findChild(QAction, 'actionResetZoom').triggered.connect(self.canvas.zoomResetEvent)
+        self.findChild(QAction, 'actionLightMode').triggered.connect(self.changeViewModeTo(LightViewMode))
+        self.findChild(QAction, 'actionGrayMode').triggered.connect(self.changeViewModeTo(GrayViewMode))
+        self.findChild(QAction, 'actionDarkMode').triggered.connect(self.changeViewModeTo(DarkViewMode))
+        # Crawl
+        self.findChild(QAction, 'actionCrawlSetting').triggered.connect(self.handleCrawlSetting)
+        self.findChild(QAction, 'actionStartCrawling').triggered.connect(self.handleStartCrawling)
+        self.findChild(QAction, 'actionPauseCrawling').triggered.connect(self.handlePauseCrawling)
+        # Tools
+        self.findChild(QAction, 'actionFindShortestPath').triggered.connect(self.handleFindShortestPath)
+        self.findChild(QAction, 'actionSearch').triggered.connect(self.handleSearch)
+        self.findChild(QAction, 'actionShowCharts').triggered.connect(self.handleShowCharts)
+        # About Us
+        self.findChild(QAction, 'actionAboutUs').triggered.connect(self.handleAboutUs)
 
+    def bindButtonActions(self):
         # -------------Toolbar---------------- #
-        # Zoom in
-        zoomInBtn = self.findChild(QToolButton, 'zoom_in_btn')
-        zoomInBtn.pressed.connect(self.canvas.zoomInEvent)
-        # Zoom out
-        zoomOutBtn = self.findChild(QToolButton, 'zoom_out_btn')
-        zoomOutBtn.pressed.connect(self.canvas.zoomOutEvent)
-        # Zoom reset
-        zoomResetBtn = self.findChild(QToolButton, 'zoom_reset_btn')
-        zoomResetBtn.pressed.connect(self.canvas.zoomResetEvent)
-        # Add vertex
-        addVertexBtn = self.findChild(QToolButton, 'add_node_btn')
-        addVertexBtn.pressed.connect(self.editMode.setAddVertex)
-        # Delete Vertex
-        deleteBtn = self.findChild(QToolButton, 'delete_node_btn')
-        deleteBtn.pressed.connect(self.editMode.setDeleteVertex)
-        # Add Line
-        addLineBtn = self.findChild(QToolButton, 'add_line_btn')
-        addLineBtn.pressed.connect(self.editMode.setAddEdge)
-        # Delete Line
-        deleteLineBtn = self.findChild(QToolButton, 'delete_line_btn')
-        deleteLineBtn.pressed.connect(self.editMode.setDeleteEdge)
+        self.findChild(QToolButton, 'zoomInBtn').pressed.connect(self.handleZoomIn)
+        self.findChild(QToolButton, 'zoomOutBtn').pressed.connect(self.handleZoomOut)
+        self.findChild(QToolButton, 'zoomResetBtn').pressed.connect(self.handleResetZoom)
+        self.findChild(QToolButton, 'startCrawlingBtn').pressed.connect(self.handleStartCrawling)
+        self.findChild(QToolButton, 'pauseCrawlingBtn').pressed.connect(self.handlePauseCrawling)
+        self.findChild(QToolButton, 'crawlSettingBtn').pressed.connect(self.handleCrawlSetting)
+        self.findChild(QToolButton, 'showChartsBtn').pressed.connect(self.handleShowCharts)
+        self.findChild(QToolButton, 'findShortestPathBtn').pressed.connect(self.handleFindShortestPath)
+        self.findChild(QToolButton, 'searchBtn').pressed.connect(self.handleSearch)
 
-        # --- Mode ---
-        # shortest path
-        findShortestPathBtn = self.findChild(QToolButton, 'findShortestPathBtn')
-        findShortestPathBtn.pressed.connect(self.activateFindShortestPathMode)
-        # bottle neck
-        findBottleNeck = self.findChild(QToolButton, 'findBottleNeckBtn')
-        findBottleNeck.pressed.connect(self.activateFindBottleNeckMode)
-        # edit
-        editBtn = self.findChild(QToolButton, 'editBtn')
-        editBtn.pressed.connect(self.activateEditGraphMode)
-        # Generate stat
-        graphBtn = self.findChild(QToolButton, 'graph_btn')
-        graphBtn.pressed.connect(self.openStatDialog)
-        # open Filter window
-        filterBtn = self.findChild(QToolButton, 'filter_dialog_btn')
-        filterBtn.pressed.connect(self.openFilterDialog)
-        # Open Constraint Dialog
-        constraintBtn = self.findChild(QToolButton, 'constraint_btn')
-        constraintBtn.pressed.connect(self.openConstraintDialog)
-        # Add Attributes Dialog
-        addAttributeBtn = self.findChild(QToolButton, 'add_attribute_btn')
-        addAttributeBtn.pressed.connect(self.openAddAttributesDialog)
-        # Real Time Dialog
-        realTimeBtn = self.findChild(QToolButton, 'real_time_btn')
-        realTimeBtn.pressed.connect(self.openRealTimeDialog)
-        # Spectrum Box
-        self.spectrum = self.findChild(QLabel, 'spectrum')
-        self.spectrum.hide()
+        # ------------ Tabs ------------#
+        self.findChild(QPushButton, 'cancelColorBtn').pressed.connect(self.handleCancelColor)
+        self.findChild(QPushButton, 'applyColorBtn').pressed.connect(self.handleApplyColor)
+        self.findChild(QPushButton, 'cancelFilterBtn').pressed.connect(self.handleCancelFilter)
+        self.findChild(QPushButton, 'applyFilterBtn').pressed.connect(self.handleApplyFilter)
 
-    def openAddAttributesDialog(self):
-        AddAttributesDialog(self.canvas).exec()
+        self.absoluteRadio = self.findChild(QRadioButton, 'absoluteRadio')
+        self.absoluteRadio.pressed.connect(self.handleAbsoluteRadioChange)
+        self.relativeRadio = self.findChild(QRadioButton, 'relativeRadio')
+        self.relativeRadio.pressed.connect(self.handleRelativeRadioChange)
 
-    def openConstraintDialog(self):
-        constraintDialog = ConstraintDialog(self.canvas)
-        constraintDialog.exec()
-        constraintDialog.check()
+    def initComboBoxes(self):
+        self.colorVertexComboBox = self.findChild(QComboBox, 'colorVertexComboBox')
+        self.colorVertexComboBox.addItems([opt[0] for opt in COLOR_VERTEX_OPTIONS])
 
-    def changeViewModeTo(self, viewModeClass):
-        def func():
-            self.canvas.addMode(viewModeClass(self))
-            self.canvas.resetViewRect()
-            self.canvas.update()
+        self.filterVertexComboBox = self.findChild(QComboBox, 'filterVertexComboBox')
+        self.filterVertexComboBox.addItems([opt[0] for opt in FILTER_VERTEX_OPTIONS])
 
-        return func
+    def findLabels(self):
+        for label in self.labels:
+            setattr(self, label, self.findChild(QLabel, label))
 
-    def newGraph(self):
+    def handleNew(self):
         g = igraph.read('resource/graph/__empty__.graphml')
         self.canvas.setGraph(g)
         self.canvas.center = QPointF(530, 1130)
         self.canvas.zoom = 0.25
         self.canvas.update()
 
-    def saveImageDialog(self):
-        fileName, _ = QFileDialog.getSaveFileName(
-            self, "Save As Image", "",
-            "All Files (*);;JPG Files (*.jpg)"
-        )
-        if fileName != '':
-            img = QPixmap(self.canvas.size())
-            painter = QPainter(img)
-            self.canvas.paint(painter)
-            painter.end()
-            img.save(fileName)
-
-    def minimizeWindow(self):
-        if self.windowState() == Qt.WindowNoState or self.windowState() == Qt.WindowMaximized:
-            # Minimize window
-            self.setWindowState(Qt.WindowMinimized)
-
-    def openFileNameDialog(self):
+    def handleOpenFile(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(
@@ -232,46 +164,7 @@ class MainWindow(QMainWindow):
         if fileName:
             self.canvas.setGraph(fileName)
 
-    def openImageToGraphDialog(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getOpenFileName(
-            self, "Open Image", "./resource/graph",
-            "All Files (*);;Python Files (*.py)", options=options
-        )
-        if fileName:
-            img = Image.open(fileName, "r")
-            w, h = img.size
-            MAX_WIDTH = 160
-            if w > MAX_WIDTH:
-                wpercent = (MAX_WIDTH * 1.0 / w)
-                hsize = int(h * wpercent)
-                img = img.resize((MAX_WIDTH, hsize), Image.ANTIALIAS)
-                w, h = img.size
-            data = img.load()
-            graph = Graph()
-            for i in range(h):
-                for j in range(w):
-                    if img.mode == 'RGBA':
-                        r, g, b, a = data[j, i]
-                        color = QColor(r, g, b).name()
-                        if a > 0:
-                            graph.add_vertex(
-                                x=j,
-                                y=i,
-                                color=color
-                            )
-                    elif img.mode == 'RGB':
-                        r, g, b = data[j, i]
-                        color = QColor(r, g, b).name()
-                        graph.add_vertex(
-                            x=j,
-                            y=i,
-                            color=color
-                        )
-            self.canvas.setGraph(graph)
-
-    def saveFileDialog(self):
+    def handleSave(self):
         options = QFileDialog.Options()
         fileName, _ = QFileDialog.getSaveFileName(
             self, "Save As", "",
@@ -291,50 +184,75 @@ class MainWindow(QMainWindow):
             elif ".gml" in fileName:
                 g.write_gml(fileName)
 
-    def activateFindShortestPathMode(self):
-        ShortestPathWeightDialog(self.canvas, self.shortestPathMode).exec()
-        self.canvas.addMode(self.shortestPathMode)
-
-    def activateEditGraphMode(self):
-        self.canvas.addMode(self.editMode)
-
-    def activateFindBottleNeckMode(self):
-        self.canvas.addMode(self.bottleNeckMode)
-
-    def displayVertex(self, vertex):
-        clearLayout(self.infoArea)
-        vertexInfo = VertexInfoWidget(vertex, self.canvas)
-        self.infoArea.addWidget(vertexInfo)
-
-    def displayEdge(self, edge):
-        clearLayout(self.infoArea)
-        edgeInfo = EdgeInfoWidget(edge, self.canvas)
-        self.infoArea.addWidget(edgeInfo)
-
-    def clearInfoArea(self):
-        clearLayout(self.infoArea)
-
-    def openStatDialog(self):
-        self.statDialog = StatDialog(self.canvas)
-        self.statDialog.show()
-
-    def openFilterDialog(self):
-        self.filterDialog = FilterDialog(
-            self.canvas,
-            self.layoutMode,
-            self.clusterVerticesMode,
-            self.centralityMode,
-            self.vertexAttrColorMode,
-            self.edgeAttrColorMode,
-            self.filterEdgeMode
+    def handleSaveImage(self):
+        fileName, _ = QFileDialog.getSaveFileName(
+            self, "Save As Image", "",
+            "All Files (*);;JPG Files (*.jpg)"
         )
-        self.filterDialog.show()
+        if fileName != '':
+            img = QPixmap(self.canvas.size())
+            painter = QPainter(img)
+            self.canvas.paint(painter)
+            painter.end()
+            img.save(fileName)
+
+    def changeViewModeTo(self, viewModeClass):
+        def func():
+            self.canvas.addMode(viewModeClass(self))
+            self.canvas.resetViewRect()
+            self.canvas.update()
+
+        return func
+
+    def handleZoomIn(self):
+        pass
+
+    def handleZoomOut(self):
+        pass
+
+    def handleResetZoom(self):
+        pass
+
+    def handleCrawlSetting(self):
+        pass
+
+    def handleStartCrawling(self):
+        pass
+
+    def handlePauseCrawling(self):
+        pass
+
+    def handleFindShortestPath(self):
+        pass
+
+    def handleSearch(self):
+        pass
+
+    def handleShowCharts(self):
+        pass
+
+    def handleCancelColor(self):
+        pass
+
+    def handleApplyColor(self):
+        pass
+
+    def handleCancelFilter(self):
+        pass
+
+    def handleApplyFilter(self):
+        pass
+
+    def handleAbsoluteRadioChange(self):
+        pass
+
+    def handleRelativeRadioChange(self):
+        pass
 
     @staticmethod
-    def aboutUsDialog():
+    def handleAboutUs():
         aboutUsWindow = AboutUsDialog()
         aboutUsWindow.exec()
 
-    def openRealTimeDialog(self):
-        self.realTimeDialog = RealTimeDialog(self.canvas, self.realTimeMode)
-        self.realTimeDialog.show()
+    def displayPage(self, page):
+        pass

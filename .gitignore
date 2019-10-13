@@ -1,6 +1,7 @@
 venv
 todo.txt
-foo.*
-.*pyc
+foo*
+*pyc
 __pycache__/
 .idea
+foo-install.txt
