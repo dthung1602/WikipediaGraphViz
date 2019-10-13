@@ -5,32 +5,43 @@ import igraph
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from igraph import Graph
-from numpy import *
 
 from .Mode import Mode
 from .utils import *
 
 
+def bind(instance, func, as_name=None):
+    """
+    Bind the function *func* to *instance*, with either provided name *as_name*
+    or the existing name of *func*. The provided *func* should accept the
+    instance as the first argument, i.e. "self".
+    """
+    if as_name is None:
+        as_name = func.__name__
+    bound_method = func.__get__(instance, instance.__class__)
+    setattr(instance, as_name, bound_method)
+    return bound_method
+
+
+def wrapGraph(graph):
+    def reference(self):
+        return self.vs['ref']
+
+    def image(self):
+        return self.vs['image']
+
+    for func in [reference, image]:
+        bind(graph, func)
+
+    graph['category'] = set()
+    return graph
+
+
 class Canvas(QWidget):
-    WIDTH = 1120
-    HEIGHT = 760
-
-    SCREEN_RECT_LINE = [
-        QLineF(0, 0, WIDTH, 0),
-        QLineF(WIDTH, 0, WIDTH, HEIGHT),
-        QLineF(WIDTH, HEIGHT, 0, HEIGHT),
-        QLineF(0, HEIGHT, 0, 0)
-    ]
-
-    SCREEN_RECT = QRectF(0, 0, WIDTH, HEIGHT)
-
     POINT_RADIUS = 8
     SELECTED_POINT_RADIUS = 12
     LINE_DISTANCE = 2
     CURVE_SELECT_SQUARE_SIZE = 10
-
-    DEFAULT_CLUSTERING_ALGO = 'community_edge_betweenness'
-    DEFAULT_GRAPH_LAYOUT = 'layout_circle'
 
     def __init__(self, width: int, height: int):
         super().__init__(None)
@@ -46,12 +57,11 @@ class Canvas(QWidget):
         ]
 
         self.center = self.zoom = None
-        self.backgroundDragging = None
         self.selectedEdges = self.selectedVertices = []
         self.viewRect = self.verticesToDraw = self.edgesToDraw = None
 
-        self.modes = []
         self.g = None
+        self.modes = []
 
     def toScaledXY(self, x, y):
         return self.toScaledX(x), self.toScaledY(y)
@@ -74,19 +84,18 @@ class Canvas(QWidget):
     def setGraph(self, g: Union[str, Graph]):
         if isinstance(g, str):
             g = igraph.read(g)
-        self.g = g
-        g.vs['degree'] = [v.degree() for v in g.vs]
+        self.g = wrapGraph(g)
+
         for mode in self.modes:
             if mode.onSetGraph():
                 break
-        self.notifyGraphUpdated()
         self.resetViewRect()
         self.update()
 
-    def notifyGraphUpdated(self):
-        for mode in self.modes:
-            if mode.onUpdateGraph():
-                break
+    def saveGraph(self, fileName):
+        g = self.g.copy()
+        # TODO preprocess
+        g.write_graphml(fileName)
 
     def addMode(self, mode: Mode):
         if mode in self.modes:
@@ -115,7 +124,9 @@ class Canvas(QWidget):
         if mode in self.modes:
             self.modes.remove(mode)
             mode.onUnset()
+            self.update()
             return True
+        self.update()
         return False
 
     def resetViewRect(self):
@@ -125,7 +136,6 @@ class Canvas(QWidget):
 
         self.center = QPointF(self.WIDTH / 2, self.HEIGHT / 2)
         self.zoom = 1
-        self.backgroundDragging = None
         self.selectedEdges = self.selectedVertices = []
 
         self.updateViewRect()
@@ -245,15 +255,15 @@ class Canvas(QWidget):
                 self.POINT_RADIUS, self.POINT_RADIUS
             )
 
-    def zoomInEvent(self):
+    def zoomIn(self):
         self.zoom *= 1.2
         self.update()
 
-    def zoomOutEvent(self):
+    def zoomOut(self):
         self.zoom /= 1.2
         self.update()
 
-    def zoomResetEvent(self):
+    def zoomReset(self):
         self.zoom = 1
         self.center = QPointF(self.WIDTH / 2, self.HEIGHT / 2)
         self.update()
@@ -290,7 +300,7 @@ class Canvas(QWidget):
         for v in self.verticesToDraw:
             if clickedToPoint(v['pos']):
                 for mode in self.modes:
-                    if mode.onSelectVertex(v):
+                    if mode.onSelectVertex(v, pos):
                         break
                 self.update()
                 return
@@ -298,7 +308,7 @@ class Canvas(QWidget):
         for e in self.edgesToDraw:
             if clickToLine(e['line']):
                 for mode in self.modes:
-                    if mode.onSelectEdge(e):
+                    if mode.onSelectEdge(e, pos):
                         break
                 self.update()
                 return
@@ -307,25 +317,18 @@ class Canvas(QWidget):
             if mode.onSelectBackground(pos):
                 return
 
-        self.backgroundDragging = pos
         self.update()
 
     def mouseMoveEvent(self, event):
         pos = event.pos()
-        if self.backgroundDragging is not None:
-            self.center = QPointF(
-                self.center.x() + (self.backgroundDragging.x() - pos.x()) / self.zoom,
-                self.center.y() + (self.backgroundDragging.y() - pos.y()) / self.zoom,
-            )
-            self.backgroundDragging = pos
-        else:
-            for mode in self.modes:
-                if mode.onMouseMove(pos):
-                    break
+        for mode in self.modes:
+            if mode.onMouseMove(pos):
+                break
         self.update()
 
     def mouseReleaseEvent(self, event):
-        self.backgroundDragging = None
+        pos = event.pos()
         for mode in self.modes:
-            if mode.onMouseRelease(event.pos()):
-                return
+            if mode.onMouseRelease(pos):
+                break
+        self.update()

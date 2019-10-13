@@ -1,4 +1,3 @@
-import igraph
 from PyQt5 import uic
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -7,33 +6,7 @@ from PyQt5.QtWidgets import *
 from canvas import *
 from .AboutUsDialog import AboutUsDialog
 
-DEFAULT_GRAPH = igraph.Graph()
-
-COLOR_VERTEX_OPTIONS = [
-    ['Pagerank', 'pagerank'],
-    ['Closeness', 'closeness'],
-    ['Betweenness', 'betweenness'],
-    ['Eigenvector', 'evcent'],
-    ['Out degree', 'outdegree'],
-    ['In degree', 'indegree'],
-    ['Reference', 'reference'],
-    ['Image', 'image'],
-]
-
-FILTER_VERTEX_OPTIONS = [
-    ['Pagerank', 'pagerank'],
-    ['Closeness', 'closeness'],
-    ['Betweenness', 'betweenness'],
-    ['Eigenvector', 'evcent'],
-    ['Out degree', 'outdegree'],
-    ['In degree', 'indegree'],
-    ['Reference', 'reference'],
-    ['Image', 'image'],
-]
-
-RELATIVE_FILTERS = [
-    'pagerank', 'closeness', 'betweenness'
-]
+DEFAULT_GRAPH = 'resource/graph/UsCarrier.graphml'
 
 
 class MainWindow(QMainWindow):
@@ -46,36 +19,40 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Wikipedia Graph Viz")
         self.setWindowFlag(Qt.WindowMaximizeButtonHint, False)
 
-        self.canvas = Canvas(1129, 600)
-        # self.findChild(QVBoxLayout, 'canvasBox').addWidget(self.canvas)
+        self.canvas = Canvas(1080, 650)
+        self.findChild(QVBoxLayout, 'canvasBox').addWidget(self.canvas)
 
         # Modes
         # 0
         self.darkMode = DarkViewMode(self)
         self.grayMode = GrayViewMode(self)
         self.lightMode = LightViewMode(self)
+        self.updateInfoMode = UpdateInfoMode(self)
         # 1
-        self.editMode = EditMode(self)
+        self.dragAndDropMode = DragAndDropMode(self)
         self.shortestPathMode = ShortestPathMode(self)
         # 2
         self.layoutMode = LayoutMode(self)
         # 3
-        self.clusterVerticesMode = ClusterVerticesMode(self)
-        self.centralityMode = CentralityMode(self)
-        self.vertexAttrColorMode = VertexAttrColorMode(self)
+        self.vertexAttrColorMode = VertexColorMode(self)
+        self.filterMode = FilterMode(self)
 
         defaultModes = [
             self.darkMode,
-            self.editMode,
+            self.updateInfoMode,
+            self.dragAndDropMode,
             self.layoutMode,
-            self.clusterVerticesMode,
+            # self.vertexAttrColorMode
         ]
-        # /for m in defaultModes:
-        #     self.canvas.addMode(m)
-        # self.canvas.setGraph(DEFAULT_GRAPH)
+        for m in defaultModes:
+            self.canvas.addMode(m)
+        self.canvas.setGraph(DEFAULT_GRAPH)
 
-        self.absoluteRadio = self.relativeRadio = self.colorVertexComboBox = self.filterVertexComboBox = None
+        self.absoluteRadio = self.relativeRadio = self.clusterLabel = self.pageInfo = None
+        self.clusterComboBox = self.colorVertexComboBox = self.filterVertexComboBox = self.layoutComboBox = None
+
         self.labels = [
+            'clusterLabel',
             'pageTitle', 'pageRank', 'pageID', 'pageInLinkCount', 'pageOutLinkCount',
             'pageRefCount', 'pageImgCount', 'pageWordCount', 'pageCatCount', 'pageSummary',
             'pageCount', 'linkCount', 'catCount', 'diameter', 'radius',
@@ -86,6 +63,7 @@ class MainWindow(QMainWindow):
         self.bindButtonActions()
         self.initComboBoxes()
         self.findLabels()
+        self.stuff()
 
     def bindMenuActions(self):
         # ------------- Menu ---------------- #
@@ -96,9 +74,9 @@ class MainWindow(QMainWindow):
         self.findChild(QAction, 'actionSaveImage').triggered.connect(self.handleSaveImage)
         self.findChild(QAction, 'actionClose').triggered.connect(self.close)
         # View
-        self.findChild(QAction, 'actionZoomIn').triggered.connect(self.canvas.zoomInEvent)
-        self.findChild(QAction, 'actionZoomOut').triggered.connect(self.canvas.zoomOutEvent)
-        self.findChild(QAction, 'actionResetZoom').triggered.connect(self.canvas.zoomResetEvent)
+        self.findChild(QAction, 'actionZoomIn').triggered.connect(self.handleZoomIn)
+        self.findChild(QAction, 'actionZoomOut').triggered.connect(self.handleZoomOut)
+        self.findChild(QAction, 'actionResetZoom').triggered.connect(self.handleResetZoom)
         self.findChild(QAction, 'actionLightMode').triggered.connect(self.changeViewModeTo(LightViewMode))
         self.findChild(QAction, 'actionGrayMode').triggered.connect(self.changeViewModeTo(GrayViewMode))
         self.findChild(QAction, 'actionDarkMode').triggered.connect(self.changeViewModeTo(DarkViewMode))
@@ -130,36 +108,48 @@ class MainWindow(QMainWindow):
         self.findChild(QPushButton, 'applyColorBtn').pressed.connect(self.handleApplyColor)
         self.findChild(QPushButton, 'cancelFilterBtn').pressed.connect(self.handleCancelFilter)
         self.findChild(QPushButton, 'applyFilterBtn').pressed.connect(self.handleApplyFilter)
+        self.findChild(QPushButton, 'applyLayoutBtn').pressed.connect(self.handleApplyLayout)
 
         self.absoluteRadio = self.findChild(QRadioButton, 'absoluteRadio')
-        self.absoluteRadio.pressed.connect(self.handleAbsoluteRadioChange)
+        self.absoluteRadio.clicked.connect(self.handleAbsoluteRadioChange)
         self.relativeRadio = self.findChild(QRadioButton, 'relativeRadio')
-        self.relativeRadio.pressed.connect(self.handleRelativeRadioChange)
+        self.relativeRadio.clicked.connect(self.handleRelativeRadioChange)
 
     def initComboBoxes(self):
         self.colorVertexComboBox = self.findChild(QComboBox, 'colorVertexComboBox')
         self.colorVertexComboBox.addItems([opt[0] for opt in COLOR_VERTEX_OPTIONS])
+        self.colorVertexComboBox.currentIndexChanged.connect(self.handleColorVertexOptionChange)
 
         self.filterVertexComboBox = self.findChild(QComboBox, 'filterVertexComboBox')
         self.filterVertexComboBox.addItems([opt[0] for opt in FILTER_VERTEX_OPTIONS])
+
+        self.clusterComboBox = self.findChild(QComboBox, 'clusterComboBox')
+        self.clusterComboBox.addItems([opt[0] for opt in CLUSTERING_ALGO_OPTIONS])
+
+        self.layoutComboBox = self.findChild(QComboBox, 'layoutComboBox')
+        self.layoutComboBox.addItems([opt[0] for opt in LAYOUT_OPTIONS])
 
     def findLabels(self):
         for label in self.labels:
             setattr(self, label, self.findChild(QLabel, label))
 
+    def stuff(self):
+        self.clusterLabel.setVisible(False)
+        self.clusterComboBox.setVisible(False)
+        self.pageInfo = self.findChild(QWidget, 'pageInfo')
+        self.fromLineEdit = self.findChild(QLineEdit, 'fromLineEdit')
+        self.toLineEdit = self.findChild(QLineEdit, 'toLineEdit')
+        self.pageInfo.setVisible(False)
+
     def handleNew(self):
-        g = igraph.read('resource/graph/__empty__.graphml')
-        self.canvas.setGraph(g)
-        self.canvas.center = QPointF(530, 1130)
-        self.canvas.zoom = 0.25
-        self.canvas.update()
+        pass
 
     def handleOpenFile(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(
             self, "Open", "./resource/graph",
-            "All Files (*);;Python Files (*.py)", options=options
+            "GraphML Files (*.graphml)", options=options
         )
         if fileName:
             self.canvas.setGraph(fileName)
@@ -168,21 +158,11 @@ class MainWindow(QMainWindow):
         options = QFileDialog.Options()
         fileName, _ = QFileDialog.getSaveFileName(
             self, "Save As", "",
-            "All Files (*);;GraphML Files (*.graphml);;GML Files (*.gml)", options=options
+            "GraphML Files (*.graphml)", options=options
         )
 
-        # process graph before saving
-        g = self.canvas.g.copy()
-        g.vs['color'] = [c.name() if isinstance(c, QColor) else c.color().name() for c in g.vs['color']]
-        g.es['color'] = [c.name() if isinstance(c, QColor) else c.color().name() for c in g.es['color']]
-        del g.es['line']
-        del g.vs['pos']
-
         if fileName:
-            if ".graphml" in fileName:
-                g.write_graphml(fileName)
-            elif ".gml" in fileName:
-                g.write_gml(fileName)
+            self.canvas.saveGraph(fileName)
 
     def handleSaveImage(self):
         fileName, _ = QFileDialog.getSaveFileName(
@@ -205,13 +185,13 @@ class MainWindow(QMainWindow):
         return func
 
     def handleZoomIn(self):
-        pass
+        self.canvas.zoomIn()
 
     def handleZoomOut(self):
-        pass
+        self.canvas.zoomOut()
 
     def handleResetZoom(self):
-        pass
+        self.canvas.zoomReset()
 
     def handleCrawlSetting(self):
         pass
@@ -231,28 +211,61 @@ class MainWindow(QMainWindow):
     def handleShowCharts(self):
         pass
 
+    def handleColorVertexOptionChange(self, opt):
+        opt = COLOR_VERTEX_OPTIONS[opt][1]
+        visible = opt == 'cluster'
+        self.clusterLabel.setVisible(visible)
+        self.clusterComboBox.setVisible(visible)
+        self.absoluteRadio.setVisible(not visible)
+        self.relativeRadio.setVisible(not visible)
+
     def handleCancelColor(self):
-        pass
+        self.canvas.removeMode(self.vertexAttrColorMode)
 
     def handleApplyColor(self):
-        pass
+        method = COLOR_VERTEX_OPTIONS[self.colorVertexComboBox.currentIndex()][1]
+        relative = self.relativeRadio.isChecked()
+        clusterAlgo = CLUSTERING_ALGO_OPTIONS[self.clusterComboBox.currentIndex()][1]
+        self.vertexAttrColorMode.setColorMethod(method, clusterAlgo, relative)
+        self.canvas.addMode(self.vertexAttrColorMode)
 
     def handleCancelFilter(self):
-        pass
+        self.canvas.removeMode(self.filterMode)
 
     def handleApplyFilter(self):
-        pass
+        attr = FILTER_VERTEX_OPTIONS[self.filterVertexComboBox.currentIndex()][1]
+        try:
+            minValue = float(self.fromLineEdit.text())
+        except ValueError:
+            minValue = float('-inf')
+        try:
+            maxValue = float(self.toLineEdit.text())
+        except ValueError:
+            maxValue = float('inf')
+        self.filterMode.setFilter(attr, minValue, maxValue)
+        self.canvas.addMode(self.filterMode)
 
-    def handleAbsoluteRadioChange(self):
-        pass
+    def handleApplyLayout(self):
+        layout = LAYOUT_OPTIONS[self.layoutComboBox.currentIndex()][1]
+        self.layoutMode.setLayout(layout)
+        self.canvas.update()
 
-    def handleRelativeRadioChange(self):
-        pass
+    def handleAbsoluteRadioChange(self, selected):
+        self.absoluteRadio.setChecked(selected)
+        self.relativeRadio.setChecked(not selected)
+
+    def handleRelativeRadioChange(self, selected):
+        self.absoluteRadio.setChecked(not selected)
+        self.relativeRadio.setChecked(selected)
 
     @staticmethod
     def handleAboutUs():
         aboutUsWindow = AboutUsDialog()
         aboutUsWindow.exec()
 
-    def displayPage(self, page):
-        pass
+    def displayInfo(self, info: dict):
+        for key, value in info.items():
+            getattr(self, key).setText(value)
+
+    def setPageInfoVisible(self, vis):
+        self.pageInfo.setVisible(vis)

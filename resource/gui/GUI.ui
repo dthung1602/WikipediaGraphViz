@@ -510,7 +510,7 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
         <string notr="true">color: white;</string>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="summaryTab">
         <attribute name="title">
@@ -520,7 +520,7 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>10</y>
+           <y>30</y>
            <width>51</width>
            <height>17</height>
           </rect>
@@ -532,8 +532,8 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
         <widget class="QLabel" name="label_16">
          <property name="geometry">
           <rect>
-           <x>160</x>
-           <y>10</y>
+           <x>180</x>
+           <y>30</y>
            <width>51</width>
            <height>17</height>
           </rect>
@@ -546,7 +546,7 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>100</y>
+           <y>120</y>
            <width>91</width>
            <height>17</height>
           </rect>
@@ -559,7 +559,7 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>130</y>
+           <y>150</y>
            <width>91</width>
            <height>17</height>
           </rect>
@@ -571,8 +571,8 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
         <widget class="QLabel" name="label_19">
          <property name="geometry">
           <rect>
-           <x>160</x>
-           <y>130</y>
+           <x>10</x>
+           <y>180</y>
            <width>81</width>
            <height>17</height>
           </rect>
@@ -585,7 +585,7 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>160</y>
+           <y>210</y>
            <width>131</width>
            <height>17</height>
           </rect>
@@ -598,7 +598,7 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>70</y>
+           <y>90</y>
            <width>71</width>
            <height>17</height>
           </rect>
@@ -610,8 +610,8 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
         <widget class="QLabel" name="label_22">
          <property name="geometry">
           <rect>
-           <x>160</x>
-           <y>70</y>
+           <x>180</x>
+           <y>90</y>
            <width>51</width>
            <height>17</height>
           </rect>
@@ -624,7 +624,7 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>40</y>
+           <y>60</y>
            <width>51</width>
            <height>17</height>
           </rect>
@@ -636,9 +636,9 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
         <widget class="QLabel" name="pageCount">
          <property name="geometry">
           <rect>
-           <x>70</x>
-           <y>10</y>
-           <width>71</width>
+           <x>110</x>
+           <y>30</y>
+           <width>51</width>
            <height>17</height>
           </rect>
          </property>
@@ -649,9 +649,9 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
         <widget class="QLabel" name="catCount">
          <property name="geometry">
           <rect>
-           <x>70</x>
-           <y>40</y>
-           <width>71</width>
+           <x>110</x>
+           <y>60</y>
+           <width>51</width>
            <height>17</height>
           </rect>
          </property>
@@ -662,9 +662,9 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
         <widget class="QLabel" name="linkCount">
          <property name="geometry">
           <rect>
-           <x>220</x>
-           <y>10</y>
-           <width>71</width>
+           <x>240</x>
+           <y>30</y>
+           <width>51</width>
            <height>17</height>
           </rect>
          </property>
@@ -675,8 +675,8 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
         <widget class="QLabel" name="diameter">
          <property name="geometry">
           <rect>
-           <x>90</x>
-           <y>70</y>
+           <x>110</x>
+           <y>90</y>
            <width>51</width>
            <height>17</height>
           </rect>
@@ -688,9 +688,9 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
         <widget class="QLabel" name="radius">
          <property name="geometry">
           <rect>
-           <x>220</x>
-           <y>70</y>
-           <width>51</width>
+           <x>240</x>
+           <y>90</y>
+           <width>41</width>
            <height>17</height>
           </rect>
          </property>
@@ -701,9 +701,9 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
         <widget class="QLabel" name="density">
          <property name="geometry">
           <rect>
-           <x>90</x>
-           <y>100</y>
-           <width>101</width>
+           <x>110</x>
+           <y>120</y>
+           <width>51</width>
            <height>17</height>
           </rect>
          </property>
@@ -714,8 +714,8 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
         <widget class="QLabel" name="avgOutDeg">
          <property name="geometry">
           <rect>
-           <x>100</x>
-           <y>130</y>
+           <x>110</x>
+           <y>150</y>
            <width>51</width>
            <height>17</height>
           </rect>
@@ -727,8 +727,8 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
         <widget class="QLabel" name="avgInDeg">
          <property name="geometry">
           <rect>
-           <x>240</x>
-           <y>130</y>
+           <x>110</x>
+           <y>180</y>
            <width>51</width>
            <height>17</height>
           </rect>
@@ -741,13 +741,54 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
          <property name="geometry">
           <rect>
            <x>150</x>
-           <y>160</y>
-           <width>111</width>
+           <y>210</y>
+           <width>51</width>
            <height>17</height>
           </rect>
          </property>
          <property name="text">
           <string>0.0</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="layoutTab">
+        <attribute name="title">
+         <string>Layout</string>
+        </attribute>
+        <widget class="QComboBox" name="layoutComboBox">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>60</y>
+           <width>281</width>
+           <height>25</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_36">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>20</y>
+           <width>131</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Layout algorithm:</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="applyLayoutBtn">
+         <property name="geometry">
+          <rect>
+           <x>200</x>
+           <y>210</y>
+           <width>89</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Apply</string>
          </property>
         </widget>
        </widget>
@@ -828,6 +869,32 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
          </property>
          <property name="text">
           <string>Relative</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+        <widget class="QLabel" name="clusterLabel">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>100</y>
+           <width>131</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Cluster algorithm:</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="clusterComboBox">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>140</y>
+           <width>281</width>
+           <height>25</height>
+          </rect>
          </property>
         </widget>
        </widget>
@@ -935,13 +1002,13 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="formLayoutBackground" native="true">
+   <widget class="QWidget" name="pageInfoBackground" native="true">
     <property name="geometry">
      <rect>
       <x>1070</x>
       <y>320</y>
       <width>301</width>
-      <height>431</height>
+      <height>371</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -949,159 +1016,177 @@ border-image: url(&quot;resource/gui/tool/shortestpath.png&quot;);
 color: white;
 padding-left: 5px</string>
     </property>
-    <widget class="QWidget" name="verticalLayoutWidget_2">
+    <widget class="QWidget" name="pageInfo" native="true">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>314</width>
-       <height>371</height>
+       <width>301</width>
+       <height>431</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QLabel" name="pageTitle">
-        <property name="styleSheet">
-         <string notr="true">font-size: 20px; 
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <widget class="QWidget" name="verticalLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>314</width>
+        <height>371</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="pageInfoLayout">
+       <item>
+        <widget class="QLabel" name="pageTitle">
+         <property name="styleSheet">
+          <string notr="true">font-size: 18px; 
 font-weight: bold;
-max-height: 60px;
-max-widht: 250px;
-padding-left: 5px;
-word-wrap: break-word</string>
-        </property>
-        <property name="text">
-         <string>Page title</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="2">
-         <widget class="QLabel" name="label_10">
-          <property name="text">
-           <string>Rank:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="pageWordCount">
-          <property name="text">
-           <string>3</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="pageRefCount">
-          <property name="text">
-           <string>6</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string># Img:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_7">
-          <property name="text">
-           <string>ID</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="pageID">
-          <property name="text">
-           <string>0</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="3">
-         <widget class="QLabel" name="pageImgCount">
-          <property name="text">
-           <string>9</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="pageInLinkCount">
-          <property name="text">
-           <string>5</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QLabel" name="pageRank">
-          <property name="text">
-           <string>0</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string># Ref:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_8">
-          <property name="text">
-           <string># In link:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
-           <string># Out link:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="3">
-         <widget class="QLabel" name="pageOutLinkCount">
-          <property name="text">
-           <string>5</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string># Word:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2">
-         <widget class="QLabel" name="label_13">
-          <property name="text">
-           <string># Cat:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="3">
-         <widget class="QLabel" name="pageCatCount">
-          <property name="text">
-           <string>5</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QPlainTextEdit" name="pageSummary">
-        <property name="styleSheet">
-         <string notr="true">max-height: 200px;
+max-height: 75px;
+max-width: 300px;
+padding-left: 5px;</string>
+         </property>
+         <property name="text">
+          <string>Page title</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="2">
+          <widget class="QLabel" name="label_10">
+           <property name="text">
+            <string>Rank:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLabel" name="pageWordCount">
+           <property name="text">
+            <string>3</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="pageRefCount">
+           <property name="text">
+            <string>6</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string># Img:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>ID:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="pageID">
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QLabel" name="pageImgCount">
+           <property name="text">
+            <string>9</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLabel" name="pageInLinkCount">
+           <property name="text">
+            <string>5</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLabel" name="pageRank">
+           <property name="text">
+            <string>0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string># Ref:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string># In link:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string># Out link:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="3">
+          <widget class="QLabel" name="pageOutLinkCount">
+           <property name="text">
+            <string>5</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string># Word:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QLabel" name="label_13">
+           <property name="text">
+            <string># Cat:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="3">
+          <widget class="QLabel" name="pageCatCount">
+           <property name="text">
+            <string>5</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="pageSummary">
+         <property name="styleSheet">
+          <string notr="true">max-height: 200px;
 font-style: italic</string>
-        </property>
-        <property name="plainText">
-         <string>Wikipedia page summary</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="plainText">
+          <string>Wikipedia page summary</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </widget>
    <zorder>verticalLayoutWidget</zorder>
@@ -1109,7 +1194,7 @@ font-style: italic</string>
    <zorder>line_3</zorder>
    <zorder>line_2</zorder>
    <zorder>verticalLayoutWidget_3</zorder>
-   <zorder>formLayoutBackground</zorder>
+   <zorder>pageInfoBackground</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

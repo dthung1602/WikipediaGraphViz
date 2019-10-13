@@ -18,7 +18,7 @@ class Mode(ABC):
     def onSetGraph(self):
         pass
 
-    def onUpdateGraph(self):
+    def onNewVertexAdded(self, vertex):
         pass
 
     def onResetViewRect(self):
@@ -42,10 +42,10 @@ class Mode(ABC):
     def beforePaintSelectedVertices(self, painter):
         pass
 
-    def onSelectVertex(self, vertex):
+    def onSelectVertex(self, vertex, pos):
         pass
 
-    def onSelectEdge(self, edge):
+    def onSelectEdge(self, edge, pos):
         pass
 
     def onSelectBackground(self, pos):

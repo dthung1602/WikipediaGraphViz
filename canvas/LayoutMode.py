@@ -16,8 +16,6 @@ LAYOUT_OPTIONS = [
     ['Star', 'layout_star']
 ]
 
-LAYOUT_WITH_WEIGHT = ['layout_drl', 'layout_fruchterman_reingold']
-
 
 class LayoutMode(Mode):
     priority = 2
@@ -25,15 +23,9 @@ class LayoutMode(Mode):
     def __init__(self, gui):
         super().__init__(gui)
         self.layoutName = 'auto'
-        self.weights = None
         self.initXY = None
 
     def onSetGraph(self):
-        self.backupInitXY()
-        self.applyLayout()
-
-    def onResetViewRect(self):
-        return
         g = self.canvas.g
         vsAttributes = g.vs.attributes()
 
@@ -43,6 +35,17 @@ class LayoutMode(Mode):
             for c, v in zip(layout.coords, g.vs):
                 v['x'] = c[0]
                 v['y'] = c[1]
+
+        # fit coordinates to screen
+        self.onResetViewRect()
+
+        # backup
+        self.initXY = {v: (v['x'], v['y']) for v in self.canvas.g.vs}
+
+        self.applyLayout()
+
+    def onResetViewRect(self):
+        g = self.canvas.g
 
         # scale coordinates to screen
         mx = min(g.vs['x']) - 1
@@ -60,32 +63,24 @@ class LayoutMode(Mode):
         g.vs['x'] = [x * scale for x in g.vs['x']]
         g.vs['y'] = [y * scale for y in g.vs['y']]
 
-    def backupInitXY(self):
-        pass
-        self.onResetViewRect()
-        self.initXY = {v: (v['x'], v['y']) for v in self.canvas.g.vs}
-
     def applyLayout(self):
-        return
         if self.layoutName == 'auto':
             for v in self.canvas.g.vs:
                 coor = self.initXY.get(v)
                 if coor:
                     v['x'] = coor[0]
                     v['y'] = coor[1]
+                else:
+                    v['x'] = self.canvas.toAbsoluteX(self.canvas.WIDTH / 2)
+                    v['y'] = self.canvas.toAbsoluteY(self.canvas.HEIGHT / 2)
+                    self.initXY[v] = (v['x'], v['y'])
         else:
-            layoutFunc = getattr(self.canvas.g, self.layoutName)
-            if self.layoutName in LAYOUT_WITH_WEIGHT:
-                layout = layoutFunc(weights=self.weights)
-            else:
-                layout = layoutFunc()
+            layout = getattr(self.canvas.g, self.layoutName)()
             for c, v in zip(layout.coords, self.canvas.g.vs):
                 v['x'] = c[0]
                 v['y'] = c[1]
         self.canvas.resetViewRect()
 
-    def setLayout(self, layoutName, weights=None):
+    def setLayout(self, layoutName):
         self.layoutName = layoutName
-        self.weights = weights
         self.applyLayout()
-        self.canvas.update()

@@ -14,7 +14,7 @@ class ShortestPathMode(Mode):
         self.canvas.selectedVertices = []
         self.canvas.selectedEdges = []
 
-    def onUpdateGraph(self):
+    def onNewVertexAdded(self):
         self.findShortestPath()
 
     def onSelectVertex(self, vertex):

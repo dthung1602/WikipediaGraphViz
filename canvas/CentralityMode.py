@@ -28,7 +28,7 @@ class CentralityMode(Mode):
     def onSetGraph(self):
         self.applyCentrality()
 
-    def onUpdateGraph(self):
+    def onNewVertexAdded(self):
         self.applyCentrality()
 
     def applyCentrality(self):
