@@ -1,5 +1,4 @@
-from PyQt5.QtCore import QPointF
-from igraph import IN, OUT
+from PyQt5.QtCore import QPointF, Qt
 
 from .Mode import Mode
 
@@ -16,7 +15,7 @@ class DragAndDropMode(Mode):
         self.canvas.selectedVertices = []
         self.canvas.selectedEdges = []
 
-    def onSelectVertex(self, vertex, pos):
+    def onSelectVertex(self, vertex, event):
         # page = vertex['page']
         # self.gui.displayInfo({
         #     'pageTitle': page.title,
@@ -34,17 +33,16 @@ class DragAndDropMode(Mode):
         self.gui.setPageInfoVisible(True)
         self.canvas.selectedEdges = []
 
-    def onSelectBackground(self, pos):
-        self.canvas.selectedVertices = []
-        self.gui.setPageInfoVisible(False)
-        self.backgroundDragging = pos
+    def onSelectBackground(self, event):
+        if event.button() == Qt.LeftButton:
+            self.canvas.selectedVertices = []
+            self.gui.setPageInfoVisible(False)
+        elif event.button() == Qt.RightButton:
+            self.backgroundDragging = event.pos()
 
-    def onMouseMove(self, pos):
-        if len(self.canvas.selectedVertices) > 0:
-            vertex = self.canvas.selectedVertices[0]
-            vertex['x'] = self.canvas.toAbsoluteX(pos.x())
-            vertex['y'] = self.canvas.toAbsoluteY(pos.y())
-        elif self.backgroundDragging is not None:
+    def onMouseMove(self, event):
+        pos = event.pos()
+        if self.backgroundDragging is not None:
             center = self.canvas.center
             zoom = self.canvas.zoom
             self.canvas.center = QPointF(
@@ -52,6 +50,10 @@ class DragAndDropMode(Mode):
                 center.y() + (self.backgroundDragging.y() - pos.y()) / zoom,
             )
             self.backgroundDragging = pos
+        elif len(self.canvas.selectedVertices) > 0:
+            vertex = self.canvas.selectedVertices[0]
+            vertex['x'] = self.canvas.toAbsoluteX(pos.x())
+            vertex['y'] = self.canvas.toAbsoluteY(pos.y())
 
-    def onMouseRelease(self, pos):
+    def onMouseRelease(self, event):
         self.backgroundDragging = None

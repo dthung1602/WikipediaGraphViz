@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 
 from canvas import *
 from .AboutUsDialog import AboutUsDialog
+from .StatDialog import StatDialog
 
 DEFAULT_GRAPH = 'resource/graph/UsCarrier.graphml'
 
@@ -29,8 +30,8 @@ class MainWindow(QMainWindow):
         self.lightMode = LightViewMode(self)
         self.updateInfoMode = UpdateInfoMode(self)
         # 1
-        self.dragAndDropMode = DragAndDropMode(self)
         self.shortestPathMode = ShortestPathMode(self)
+        self.dragAndDropMode = DragAndDropMode(self)
         # 2
         self.layoutMode = LayoutMode(self)
         # 3
@@ -41,13 +42,13 @@ class MainWindow(QMainWindow):
             self.darkMode,
             self.updateInfoMode,
             self.dragAndDropMode,
-            self.layoutMode,
-            # self.vertexAttrColorMode
+            self.layoutMode
         ]
         for m in defaultModes:
             self.canvas.addMode(m)
         self.canvas.setGraph(DEFAULT_GRAPH)
 
+        self.statDialog = self.fromLineEdit = self.toLineEdit = None
         self.absoluteRadio = self.relativeRadio = self.clusterLabel = self.pageInfo = None
         self.clusterComboBox = self.colorVertexComboBox = self.filterVertexComboBox = self.layoutComboBox = None
 
@@ -203,13 +204,14 @@ class MainWindow(QMainWindow):
         pass
 
     def handleFindShortestPath(self):
-        pass
+        self.canvas.toggleMode(self.shortestPathMode)
 
     def handleSearch(self):
         pass
 
     def handleShowCharts(self):
-        pass
+        self.statDialog = StatDialog(self.canvas)
+        self.statDialog.show()
 
     def handleColorVertexOptionChange(self, opt):
         opt = COLOR_VERTEX_OPTIONS[opt][1]

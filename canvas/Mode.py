@@ -42,17 +42,17 @@ class Mode(ABC):
     def beforePaintSelectedVertices(self, painter):
         pass
 
-    def onSelectVertex(self, vertex, pos):
+    def onSelectVertex(self, vertex, event):
         pass
 
-    def onSelectEdge(self, edge, pos):
+    def onSelectEdge(self, edge, event):
         pass
 
-    def onSelectBackground(self, pos):
+    def onSelectBackground(self, event):
         pass
 
-    def onMouseMove(self, pos):
+    def onMouseMove(self, event):
         pass
 
-    def onMouseRelease(self, pos):
+    def onMouseRelease(self, event):
         pass

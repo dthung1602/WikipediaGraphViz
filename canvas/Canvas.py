@@ -129,6 +129,12 @@ class Canvas(QWidget):
         self.update()
         return False
 
+    def toggleMode(self, mode: Mode):
+        if mode in self.modes:
+            self.removeMode(mode)
+        else:
+            self.addMode(mode)
+
     def resetViewRect(self):
         for mode in self.modes:
             if mode.onResetViewRect():
@@ -300,7 +306,7 @@ class Canvas(QWidget):
         for v in self.verticesToDraw:
             if clickedToPoint(v['pos']):
                 for mode in self.modes:
-                    if mode.onSelectVertex(v, pos):
+                    if mode.onSelectVertex(v, event):
                         break
                 self.update()
                 return
@@ -308,13 +314,13 @@ class Canvas(QWidget):
         for e in self.edgesToDraw:
             if clickToLine(e['line']):
                 for mode in self.modes:
-                    if mode.onSelectEdge(e, pos):
+                    if mode.onSelectEdge(e, event):
                         break
                 self.update()
                 return
 
         for mode in self.modes:
-            if mode.onSelectBackground(pos):
+            if mode.onSelectBackground(event):
                 return
 
         self.update()
@@ -322,13 +328,13 @@ class Canvas(QWidget):
     def mouseMoveEvent(self, event):
         pos = event.pos()
         for mode in self.modes:
-            if mode.onMouseMove(pos):
+            if mode.onMouseMove(event):
                 break
         self.update()
 
     def mouseReleaseEvent(self, event):
         pos = event.pos()
         for mode in self.modes:
-            if mode.onMouseRelease(pos):
+            if mode.onMouseRelease(event):
                 break
         self.update()
