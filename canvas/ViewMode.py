@@ -1,8 +1,7 @@
 from abc import ABC
 from itertools import chain
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPainter, QPen, QColor
+from PyQt5.QtGui import QPainter, QPen, QBrush, QColor
 
 from .Mode import Mode
 
@@ -17,7 +16,8 @@ class ViewMode(Mode, ABC):
 
     backgroundColor = None
     foregroundColor = None
-    selectedPen = QPen(QColor(255, 0, 0), 4)
+    selectedPen = QPen(QColor(255, 0, 0), 2)
+    selectedBrush = QBrush(QColor(255, 0, 0))
 
     def onSet(self):
         g = self.canvas.g
@@ -53,12 +53,14 @@ class ViewMode(Mode, ABC):
 
     def beforePaintEdges(self, painter):
         painter.setPen(self.foregroundColor)
+        painter.setBrush(self.foregroundColor)
 
     def beforePaintVertices(self, painter):
         painter.setPen(self.backgroundColor)
 
     def beforePaintSelectedEdges(self, painter):
         painter.setPen(self.selectedPen)
+        painter.setBrush(self.selectedBrush)
 
 
 class DarkViewMode(ViewMode):

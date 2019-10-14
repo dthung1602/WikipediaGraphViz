@@ -58,7 +58,7 @@ class CrawlMode(Mode):
         self.startTime = time()
         self.terminate = False
         self.pauseLock = Lock()
-        self.canvas.setGraph(Graph())
+        self.canvas.setGraph(Graph(directed=True))
         self.thread = Thread(target=self.crawl, daemon=False)
         self.thread.start()
 

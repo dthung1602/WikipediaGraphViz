@@ -1,4 +1,4 @@
-from PyQt5 import uic
+from PyQt5 import uic, QtGui
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -297,6 +297,11 @@ class MainWindow(QMainWindow):
 
     def setPageInfoVisible(self, vis):
         self.pageInfo.setVisible(vis)
+
+    def closeEvent(self, event):
+        self.crawlSettingDialog.close()
+        self.statDialog.close()
+        super().closeEvent(event)
 
     def notifyCrawlDone(self):
         # TODO something

@@ -1,5 +1,6 @@
-from math import sqrt
+from math import sqrt, atan2, cos
 from typing import Union
+
 import igraph
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -24,10 +25,10 @@ def bind(instance, func, as_name=None):
 
 def wrapGraph(graph):
     def reference(self):
-        return self.vs['ref']
+        return self.vs['refCount']
 
     def image(self):
-        return self.vs['image']
+        return self.vs['imgCount']
 
     for func in [reference, image]:
         bind(graph, func)
@@ -40,6 +41,7 @@ def wrapGraph(graph):
 
 class Canvas(QWidget):
     POINT_RADIUS = 8
+    ARROW_SIZE = 6
     SELECTED_POINT_RADIUS = 12
     LINE_DISTANCE = 2
     CURVE_SELECT_SQUARE_SIZE = 10
@@ -154,17 +156,39 @@ class Canvas(QWidget):
 
         self.updateViewRect()
 
+    def createArrow(self, start, end):
+        xStart = start.x()
+        yStart = start.y()
+        xEnd = end.x()
+        yEnd = end.y()
+
+        baseVector = QVector2D(-xEnd + xStart, -yEnd + yStart)
+        unitVector = baseVector / baseVector.length()
+        baseVector = unitVector * self.ARROW_SIZE
+        a = atan2(baseVector.y(), baseVector.x())
+        p = pi / 6
+        xb = self.ARROW_SIZE * cos(a - p)
+        yb = self.ARROW_SIZE * sin(a - p)
+        xc = self.ARROW_SIZE * cos(a + p)
+        yc = self.ARROW_SIZE * sin(a + p)
+
+        xEnd += unitVector.x() * self.POINT_RADIUS / 2
+        yEnd += unitVector.y() * self.POINT_RADIUS / 2
+
+        path = QPainterPath(QPointF(xStart, yStart))
+        path.lineTo(xEnd, yEnd)
+        path.lineTo(xEnd + xb, yEnd + yb)
+        path.lineTo(xEnd + xc, yEnd + yc)
+        path.lineTo(xEnd, yEnd)
+
+        return path
+
     def updateViewRect(self):
         viewRectWidth = self.WIDTH / self.zoom
         viewRectHeight = self.HEIGHT / self.zoom
         viewRectX = self.center.x() - viewRectWidth / 2
         viewRectY = self.center.y() - viewRectHeight / 2
         self.viewRect = QRectF(viewRectX, viewRectY, viewRectWidth, viewRectHeight)
-
-        def intersectWithViewRect(line):
-            if isinstance(line, QLineF):
-                return any([line.intersect(vrl, QPointF()) == 1 for vrl in self.SCREEN_RECT_LINE])
-            return line.intersects(self.SCREEN_RECT)
 
         def inScreen(edge):
             return self.SCREEN_RECT.contains(self.g.vs[edge.source]['pos']) \
@@ -175,39 +199,15 @@ class Canvas(QWidget):
             self.toScaledY(v['y'])
         ) for v in self.g.vs]
 
-        multipleEdge = {}
-        for e in self.g.es:
-            count = e.count_multiple()
-            key = (e.source, e.target)
-            if count > 1 and key not in multipleEdge:
-                p1 = self.g.vs[e.source]['pos']
-                p2 = self.g.vs[e.target]['pos']
-                midPoint = QPointF((p1.x() + p2.x()) / 2, (p1.y() + p2.y()) / 2)
-                normalVector = QVector2D(p1.y() - p2.y(), p2.x() - p1.x())
-                startVector = QVector2D(midPoint.x() - normalVector.x() / 2, midPoint.y() - normalVector.y() / 2)
-                incVector = normalVector / (count - 1)
-                multipleEdge[key] = [(p1, p2, (startVector + incVector * i).toPointF())
-                                     for i in range(count)]
-
-        def createLine(edge):
-            result = multipleEdge.get((edge.source, edge.target))
-            if result:
-                pos1, pos2, controlPoint = result.pop()
-                path = QPainterPath(pos1)
-                path.quadTo(controlPoint, pos2)
-                path.quadTo(controlPoint, pos1)
-                return path
-            return QLineF(
-                self.g.vs[edge.source]['pos'],
-                self.g.vs[edge.target]['pos'],
-            )
-
-        self.g.es['line'] = [createLine(e) for e in self.g.es]
+        self.g.es['line'] = [self.createArrow(
+            self.g.vs[e.source]['pos'],
+            self.g.vs[e.target]['pos'],
+        ) for e in self.g.es]
 
         self.verticesToDraw = [v for v in self.g.vs if self.viewRect.contains(v['x'], v['y'])]
 
         linesInScreen = {e for e in self.g.es if inScreen(e)}
-        linesIntersectScreen = {e for e in self.g.es if intersectWithViewRect(e['line'])}
+        linesIntersectScreen = {e for e in self.g.es if e['line'].intersects(self.SCREEN_RECT)}
         self.edgesToDraw = list(linesInScreen.union(linesIntersectScreen))
 
         for mode in self.modes:
@@ -231,11 +231,7 @@ class Canvas(QWidget):
                 break
         for edge in self.edgesToDraw:
             painter.setPen(edge['color'])
-            line = edge['line']
-            if isinstance(line, QLineF):
-                painter.drawLine(line)
-            else:
-                painter.drawPath(line)
+            painter.drawPath(edge['line'])
 
         for mode in self.modes:
             if mode.beforePaintVertices(painter):
@@ -252,11 +248,7 @@ class Canvas(QWidget):
             if mode.beforePaintSelectedEdges(painter):
                 break
         for edge in self.selectedEdges:
-            line = edge['line']
-            if isinstance(line, QLineF):
-                painter.drawLine(line)
-            else:
-                painter.drawPath(line)
+            painter.drawPath(edge['line'])
 
         for mode in self.modes:
             if mode.beforePaintSelectedVertices(painter):
