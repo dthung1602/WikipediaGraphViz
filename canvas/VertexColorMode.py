@@ -63,7 +63,7 @@ class VertexColorMode(Mode):
 
             def getClusterId(vertex):
                 for cluster in clusters:
-                    if vertex['id'] in cluster.vs['id']:
+                    if vertex['pageid'] in cluster.vs['pageid']:
                         return str(id(cluster))
 
             clusterToColor = {str(id(cl)): randomColor() for cl in clusters}

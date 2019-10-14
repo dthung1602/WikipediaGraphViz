@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 
 from canvas import *
 from .AboutUsDialog import AboutUsDialog
+from .CrawlDialog import CrawlDialog
 from .StatDialog import StatDialog
 
 DEFAULT_GRAPH = 'resource/graph/UsCarrier.graphml'
@@ -37,25 +38,30 @@ class MainWindow(QMainWindow):
         # 3
         self.vertexAttrColorMode = VertexColorMode(self)
         self.filterMode = FilterMode(self)
+        # 99
+        self.crawlMode = CrawlMode(self)
 
         defaultModes = [
             self.darkMode,
             self.updateInfoMode,
             self.dragAndDropMode,
-            self.layoutMode
+            self.layoutMode,
+            self.crawlMode
         ]
         for m in defaultModes:
             self.canvas.addMode(m)
         self.canvas.setGraph(DEFAULT_GRAPH)
 
-        self.statDialog = self.fromLineEdit = self.toLineEdit = None
-        self.absoluteRadio = self.relativeRadio = self.clusterLabel = self.pageInfo = None
+        self.statDialog = self.crawlSettingDialog = None
+        self.startStopBtn = self.pauseResumeBtn = None
+        self.fromLineEdit = self.toLineEdit = None
+        self.absoluteRadio = self.relativeRadio = self.clusterLabel = self.pageInfo = self.pageSummary = None
         self.clusterComboBox = self.colorVertexComboBox = self.filterVertexComboBox = self.layoutComboBox = None
 
         self.labels = [
-            'clusterLabel',
-            'pageTitle', 'pageRank', 'pageID', 'pageInLinkCount', 'pageOutLinkCount',
-            'pageRefCount', 'pageImgCount', 'pageWordCount', 'pageCatCount', 'pageSummary',
+            'clusterLabel', 'timeElapsed'
+                            'pageTitle', 'pageRank', 'pageID', 'pageInLinkCount', 'pageOutLinkCount',
+            'pageRefCount', 'pageImgCount', 'pageWordCount', 'pageCatCount',
             'pageCount', 'linkCount', 'catCount', 'diameter', 'radius',
             'density', 'avgOutDeg', 'avgInDeg', 'avgShortestPath'
         ]
@@ -82,9 +88,11 @@ class MainWindow(QMainWindow):
         self.findChild(QAction, 'actionGrayMode').triggered.connect(self.changeViewModeTo(GrayViewMode))
         self.findChild(QAction, 'actionDarkMode').triggered.connect(self.changeViewModeTo(DarkViewMode))
         # Crawl
-        self.findChild(QAction, 'actionCrawlSetting').triggered.connect(self.handleCrawlSetting)
-        self.findChild(QAction, 'actionStartCrawling').triggered.connect(self.handleStartCrawling)
-        self.findChild(QAction, 'actionPauseCrawling').triggered.connect(self.handlePauseCrawling)
+        # self.findChild(QAction, 'actionStartCrawling').triggered.connect(self.handleStartCrawling)
+        # self.findChild(QAction, 'actionStopCrawling').triggered.connect(self.handleStartStop)
+        # self.findChild(QAction, 'actionPauseCrawling').triggered.connect(self.handlePauseResume)
+        # self.findChild(QAction, 'actionResumeCrawling').triggered.connect(self.handleResumeCrawling)
+        # self.findChild(QAction, 'actionCrawlSetting').triggered.connect(self.handleCrawlSetting)
         # Tools
         self.findChild(QAction, 'actionFindShortestPath').triggered.connect(self.handleFindShortestPath)
         self.findChild(QAction, 'actionSearch').triggered.connect(self.handleSearch)
@@ -97,9 +105,13 @@ class MainWindow(QMainWindow):
         self.findChild(QToolButton, 'zoomInBtn').pressed.connect(self.handleZoomIn)
         self.findChild(QToolButton, 'zoomOutBtn').pressed.connect(self.handleZoomOut)
         self.findChild(QToolButton, 'zoomResetBtn').pressed.connect(self.handleResetZoom)
-        self.findChild(QToolButton, 'startCrawlingBtn').pressed.connect(self.handleStartCrawling)
-        self.findChild(QToolButton, 'pauseCrawlingBtn').pressed.connect(self.handlePauseCrawling)
+
+        self.pauseResumeBtn = self.findChild(QToolButton, 'pauseResumeBtn')
+        self.pauseResumeBtn.pressed.connect(self.handlePauseResume)
+        self.startStopBtn = self.findChild(QToolButton, 'startStopBtn')
+        self.startStopBtn.pressed.connect(self.handleStartStop)
         self.findChild(QToolButton, 'crawlSettingBtn').pressed.connect(self.handleCrawlSetting)
+
         self.findChild(QToolButton, 'showChartsBtn').pressed.connect(self.handleShowCharts)
         self.findChild(QToolButton, 'findShortestPathBtn').pressed.connect(self.handleFindShortestPath)
         self.findChild(QToolButton, 'searchBtn').pressed.connect(self.handleSearch)
@@ -138,6 +150,7 @@ class MainWindow(QMainWindow):
         self.clusterLabel.setVisible(False)
         self.clusterComboBox.setVisible(False)
         self.pageInfo = self.findChild(QWidget, 'pageInfo')
+        self.pageSummary = self.findChild(QPlainTextEdit)
         self.fromLineEdit = self.findChild(QLineEdit, 'fromLineEdit')
         self.toLineEdit = self.findChild(QLineEdit, 'toLineEdit')
         self.pageInfo.setVisible(False)
@@ -194,14 +207,23 @@ class MainWindow(QMainWindow):
     def handleResetZoom(self):
         self.canvas.zoomReset()
 
+    def handlePauseResume(self):
+        if self.crawlMode.status == 'running':
+            self.crawlMode.pause()
+        else:
+            self.crawlMode.resume()
+
+    def handleStartStop(self):
+        if self.crawlMode.status == 'stopped':
+            self.crawlMode.start()
+            self.pauseResumeBtn.setDisabled(False)
+        else:
+            self.crawlMode.stop()
+            self.pauseResumeBtn.setDisabled(True)
+
     def handleCrawlSetting(self):
-        pass
-
-    def handleStartCrawling(self):
-        pass
-
-    def handlePauseCrawling(self):
-        pass
+        self.crawlSettingDialog = CrawlDialog(self.canvas, self.crawlMode)
+        self.crawlSettingDialog.show()
 
     def handleFindShortestPath(self):
         self.canvas.toggleMode(self.shortestPathMode)
@@ -267,7 +289,15 @@ class MainWindow(QMainWindow):
 
     def displayInfo(self, info: dict):
         for key, value in info.items():
-            getattr(self, key).setText(value)
+            if key == 'pageSummary':
+                self.pageSummary.clear()
+                self.pageSummary.insertPlainText(value)
+            else:
+                getattr(self, key).setText(value)
 
     def setPageInfoVisible(self, vis):
         self.pageInfo.setVisible(vis)
+
+    def notifyCrawlDone(self):
+        # TODO something
+        self.crawlSettingDialog.notifyCrawlDone()

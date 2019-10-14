@@ -22,14 +22,16 @@ class LayoutMode(Mode):
 
     def __init__(self, gui):
         super().__init__(gui)
-        self.layoutName = 'auto'
+        self.layoutName = 'layout_circle'
         self.initXY = None
 
     def onSetGraph(self):
         g = self.canvas.g
-        vsAttributes = g.vs.attributes()
+        if g.vcount() == 0:
+            return
 
         # if xy not in graph data, use default layout
+        vsAttributes = g.vs.attributes()
         if 'x' not in vsAttributes or 'y' not in vsAttributes:
             layout = g.layout_reingold_tilford_circular()
             for c, v in zip(layout.coords, g.vs):
@@ -44,24 +46,37 @@ class LayoutMode(Mode):
 
         self.applyLayout()
 
+    def onNewVertexAdded(self, vertex):
+        self.applyLayout()
+
     def onResetViewRect(self):
         g = self.canvas.g
+        if g.vcount() == 0:
+            return
 
-        # scale coordinates to screen
-        mx = min(g.vs['x']) - 1
-        my = min(g.vs['y']) - 1
+        if g.vcount() == 1:
+            v = g.vs[0]
+            v['x'] = self.canvas.WIDTH / 2
+            v['y'] = self.canvas.HEIGHT / 2
+            return
+
+        # use same origin
+        mx = min(g.vs['x'])
+        my = min(g.vs['y'])
         g.vs['x'] = [x - mx for x in g.vs['x']]
         g.vs['y'] = [y - my for y in g.vs['y']]
 
+        # fit rect in screen rect
         mx = max(g.vs['x'])
         my = max(g.vs['y'])
-        if mx / my > self.canvas.WIDTH / self.canvas.HEIGHT:
-            scale = self.canvas.WIDTH / mx
-        else:
-            scale = self.canvas.HEIGHT / my
+        scale = min(self.canvas.WIDTH / mx, self.canvas.HEIGHT / my)
 
-        g.vs['x'] = [x * scale for x in g.vs['x']]
-        g.vs['y'] = [y * scale for y in g.vs['y']]
+        # align center
+        dx = (self.canvas.WIDTH - mx * scale) / 2.0
+        dy = (self.canvas.HEIGHT - my * scale) / 2.0
+        
+        g.vs['x'] = [x * scale + dx for x in g.vs['x']]
+        g.vs['y'] = [y * scale + dy for y in g.vs['y']]
 
     def applyLayout(self):
         if self.layoutName == 'auto':

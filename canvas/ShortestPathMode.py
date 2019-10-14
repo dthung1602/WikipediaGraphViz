@@ -27,18 +27,17 @@ class ShortestPathMode(Mode):
             self.findShortestPath()
 
     def onSelectVertex(self, vertex, event):
-        # page = vertex['page']
         # self.gui.displayInfo({
-        #     'pageTitle': page.title,
+        #     'pageTitle': vertex['title'],
         #     'pageRank': str(vertex['pagerankRelative']),
-        #     'pageID': str(page.pageid),
+        #     'pageID': str(vertex.pageid),
         #     'pageInLinkCount': str(vertex.indegree()),
         #     'pageOutLinkCount': str(vertex.outdegree()),
-        #     'pageRefCount': str(len(page.reference)),
-        #     'pageImgCount': str(len(page.image)),
+        #     'pageRefCount': str(vertex['refCount']),
+        #     'pageImgCount': str(vertex['imgCount']),
         #     'pageWordCount': str(vertex['wordCount']),
-        #     'pageCatCount': str(len(page.category)),
-        #     'pageSummary': page.summary,
+        #     'pageCatCount': str(vertex['catCount']),
+        #     'pageSummary': vertex['summary'],
         # })
         canvas = self.canvas
         svl = len(canvas.selectedVertices)

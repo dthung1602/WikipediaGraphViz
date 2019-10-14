@@ -1,3 +1,5 @@
+from math import isnan
+
 from numpy import argsort, mean
 
 from .Mode import Mode
@@ -10,13 +12,20 @@ class UpdateInfoMode(Mode):
         self.recalculate()
 
     def onNewVertexAdded(self, vertex):
-        # g = self.canvas.g
-        # g['category'].add(vertex.page.category)
-        # page = vertex['page']
-        # vertex['wordCount'] = page.summary.replace('\n', ' ').count(' ')
-        # vertex['refCount'] = len(page.reference)
-        # vertex['imgCount'] = len(page.iamge)
-        # vertex['catCount'] = len(page.category)
+        g = self.canvas.g
+        page = vertex['page']
+        g['category'].update(page.categories)
+        g['pageid'].add(page.pageid)
+        g['title'].add(page.title)
+        vertex['title'] = page.title
+        vertex['pageid'] = page.pageid
+        vertex['links'] = page.links
+        vertex['summary'] = page.summary
+        vertex['wordCount'] = page.summary.replace('\n', ' ').count(' ')
+        vertex['refCount'] = len(page.references)
+        vertex['imgCount'] = len(page.images)
+        vertex['catCount'] = len(page.categories)
+        del vertex['page']
         self.recalculate()
 
     def recalculate(self):
@@ -33,25 +42,23 @@ class UpdateInfoMode(Mode):
             'linkCount': str(g.ecount()),
             'catCount': str(len(g['category'])),
             'diameter': str(g.diameter()),
-            'radius': str(int(g.radius())),
+            'radius': str(int(0 if isnan(g.radius()) else g.radius())),
             'density': str(g.density())[:5],
             'avgOutDeg': str(mean(g.outdegree()))[:5],
             'avgInDeg': str(mean(g.indegree()))[:5],
-            'avgShortestPath': '0'
         }
         if len(self.canvas.selectedVertices) > 0:
             vertex = self.canvas.selectedVertices[-1]
-            page = vertex['page']
             info.update({
-                'pageTitle': page.title,
+                'pageTitle': vertex['title'],
                 'pageRank': str(vertex['pagerankRelative']),
-                'pageID': str(page.pageid),
+                'pageID': str(vertex['pageid']),
                 'pageInLinkCount': str(vertex.indegree()),
                 'pageOutLinkCount': str(vertex.outdegree()),
                 'pageRefCount': str(vertex['refCount']),
                 'pageImgCount': str(vertex['imgCount']),
                 'pageWordCount': str(vertex['wordCount']),
                 'pageCatCount': str(vertex['catCount']),
-                'pageSummary': page.summary,
+                'pageSummary': vertex['summary'],
             })
         self.gui.displayInfo(info)

@@ -1,6 +1,5 @@
 from math import sqrt
 from typing import Union
-
 import igraph
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -34,6 +33,8 @@ def wrapGraph(graph):
         bind(graph, func)
 
     graph['category'] = set()
+    graph['title'] = set()
+    graph['pageid'] = set()
     return graph
 
 
@@ -90,6 +91,13 @@ class Canvas(QWidget):
             if mode.onSetGraph():
                 break
         self.resetViewRect()
+        self.update()
+
+    def notifyNewVertex(self, ):
+        vertex = self.g.vs[self.g.vcount() - 1]
+        for mode in self.modes:
+            if mode.onNewVertexAdded(vertex):
+                break
         self.update()
 
     def saveGraph(self, fileName):

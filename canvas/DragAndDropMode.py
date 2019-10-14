@@ -16,19 +16,18 @@ class DragAndDropMode(Mode):
         self.canvas.selectedEdges = []
 
     def onSelectVertex(self, vertex, event):
-        # page = vertex['page']
-        # self.gui.displayInfo({
-        #     'pageTitle': page.title,
-        #     'pageRank': str(vertex['pagerankRelative']),
-        #     'pageID': str(page.pageid),
-        #     'pageInLinkCount': str(vertex.indegree()),
-        #     'pageOutLinkCount': str(vertex.outdegree()),
-        #     'pageRefCount': str(len(page.reference)),
-        #     'pageImgCount': str(len(page.image)),
-        #     'pageWordCount': str(vertex['wordCount']),
-        #     'pageCatCount': str(len(page.category)),
-        #     'pageSummary': page.summary,
-        # })
+        self.gui.displayInfo({
+            'pageTitle': vertex['title'],
+            'pageRank': str(vertex['pagerankRelative']),
+            'pageID': str(vertex['pageid']),
+            'pageInLinkCount': str(vertex.indegree()),
+            'pageOutLinkCount': str(vertex.outdegree()),
+            'pageRefCount': str(vertex['refCount']),
+            'pageImgCount': str(vertex['imgCount']),
+            'pageWordCount': str(vertex['wordCount']),
+            'pageCatCount': str(vertex['catCount']),
+            'pageSummary': vertex['summary'],
+        })
         self.canvas.selectedVertices = [vertex]
         self.gui.setPageInfoVisible(True)
         self.canvas.selectedEdges = []
