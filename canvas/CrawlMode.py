@@ -30,6 +30,7 @@ class CrawlMode(Mode, QObject):
         self.language = 'en'
         self.searchAlgo = 'RAND'
         self.delay = 1
+        self.loadDetails = True
         self.startPage = None
         self.reachPage = self.maxPage = self.maxDepth = self.timeLimit = None
         self.toCrawl = deque()
@@ -62,11 +63,12 @@ class CrawlMode(Mode, QObject):
         self.stop()
 
     def setCrawlSetting(self, language='en', searchAlgo='BFS', delay=1, startPage='Graph theory',
-                        reachPage=None, maxPage=None, maxDepth=None, timeLimit=None):
+                        loadDetails=True, reachPage=None, maxPage=None, maxDepth=None, timeLimit=None):
         self.language = language
         self.searchAlgo = searchAlgo
         self.delay = delay
         self.startPage = startPage
+        self.loadDetails = loadDetails
         self.reachPage = reachPage
         self.maxPage = maxPage
         self.maxDepth = maxDepth
@@ -96,6 +98,7 @@ class CrawlMode(Mode, QObject):
         self.terminate = False
         self.pauseLock = Lock()
         self.canvas.setGraph(Graph(directed=True))
+        self.canvas.g['loadDetails'] = self.loadDetails
         self.crawlThread = Thread(target=self.crawl, daemon=False)
         self.crawlThread.start()
 
@@ -132,7 +135,7 @@ class CrawlMode(Mode, QObject):
                     pageTitle = self.toCrawl.popleft()
                 print('>> ' + pageTitle)
                 try:
-                    page = wikipedia.page(pageTitle, preload=True)
+                    page = wikipedia.page(pageTitle, preload=self.loadDetails)
                     if page.pageid in g['pageid']:
                         page = None
                 except (WikipediaException, KeyError) as e:

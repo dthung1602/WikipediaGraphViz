@@ -14,17 +14,27 @@ class UpdateInfoMode(Mode):
     def onNewVertexAdded(self, vertex):
         g = self.canvas.g
         page = vertex['page']
-        g['category'].update(page.categories)
+
         g['pageid'].add(page.pageid)
         g['title'].add(page.title)
         vertex['title'] = page.title
         vertex['pageid'] = page.pageid
         vertex['links'] = page.links
-        vertex['summary'] = page.summary
-        vertex['wordCount'] = page.summary.replace('\n', ' ').count(' ')
-        vertex['refCount'] = len(page.references)
-        vertex['imgCount'] = len(page.images)
-        vertex['catCount'] = len(page.categories)
+
+        if g['loadDetails']:
+            g['category'].update(page.categories)
+            vertex['summary'] = page.summary
+            vertex['wordCount'] = page.summary.replace('\n', ' ').count(' ')
+            vertex['refCount'] = len(page.references)
+            vertex['imgCount'] = len(page.images)
+            vertex['catCount'] = len(page.categories)
+        else:
+            vertex['summary'] = 'Summary is not available'
+            vertex['wordCount'] = 0
+            vertex['refCount'] = 0
+            vertex['imgCount'] = 0
+            vertex['catCount'] = 0
+
         del vertex['page']
         self.recalculate()
 

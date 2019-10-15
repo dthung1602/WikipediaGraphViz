@@ -36,6 +36,8 @@ def wrapGraph(graph):
     graph['category'] = set()
     graph['title'] = set()
     graph['pageid'] = set()
+    graph['loadDetails'] = True
+
     return graph
 
 

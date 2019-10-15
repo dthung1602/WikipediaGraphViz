@@ -1,7 +1,9 @@
 import wikipedia
 from PyQt5.QtGui import QIcon
-from PyQt5.QtWidgets import QMainWindow, QComboBox, QLineEdit, QRadioButton, QPushButton, QCheckBox
+from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
+
+from .Switch import Switch
 
 AVAILABLE_WIKI_LANG = [  # 15 wiki with > 1000000 pages
     ['English', 'en'],
@@ -37,6 +39,8 @@ class CrawlDialog(QMainWindow):
 
         self.delay = self.findChild(QLineEdit, 'delay')
         self.startPage = self.findChild(QLineEdit, 'startPage')
+        self.loadDetails = Switch(parent=self.findChild(QLabel, 'switchContainer'))
+        self.loadDetails.setChecked(True)
 
         for lineEditName in ['reachPage', 'maxPage', 'maxDepth', 'timeLimit']:
             setattr(self, lineEditName, self.findChild(QLineEdit, lineEditName))
@@ -130,7 +134,8 @@ class CrawlDialog(QMainWindow):
                 'language': AVAILABLE_WIKI_LANG[self.languageComboBox.currentIndex()][1],
                 'searchAlgo': 'DFS' if self.dfsRadio.isChecked() else 'BFS' if self.bfsRadio.isChecked() else 'RAND',
                 'delay': self.floatOrDefault('delay', 1),
-                'startPage': self.strOrDefault('startPage', 'Graph theory')
+                'startPage': self.strOrDefault('startPage', 'Graph theory'),
+                'loadDetails': self.loadDetails.isChecked()
             }
 
             if self.reachPageCheckBox.isChecked():

@@ -62,8 +62,8 @@ class MainWindow(QMainWindow):
         self.clusterComboBox = self.colorVertexComboBox = self.filterVertexComboBox = self.layoutComboBox = None
 
         self.labels = [
-            'clusterLabel', 'timeElapsed'
-                            'pageTitle', 'pageRank', 'pageID', 'pageInLinkCount', 'pageOutLinkCount',
+            'clusterLabel', 'timeElapsed',
+            'pageTitle', 'pageRank', 'pageID', 'pageInLinkCount', 'pageOutLinkCount',
             'pageRefCount', 'pageImgCount', 'pageWordCount', 'pageCatCount',
             'pageCount', 'linkCount', 'catCount', 'diameter', 'radius',
             'density', 'avgOutDeg', 'avgInDeg', 'avgShortestPath'
