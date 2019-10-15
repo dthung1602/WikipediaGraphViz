@@ -53,6 +53,7 @@ class MainWindow(QMainWindow):
         self.canvas.setGraph(DEFAULT_GRAPH)
 
         self.statDialog = self.crawlSettingDialog = None
+        self.status = self.timeElapsed = None
         self.startBtn = self.stopBtn = self.pauseBtn = self.resumeBtn = None
         self.fromLineEdit = self.toLineEdit = None
         self.absoluteRadio = self.relativeRadio = self.clusterLabel = self.pageInfo = self.pageSummary = None
@@ -153,6 +154,8 @@ class MainWindow(QMainWindow):
     def stuff(self):
         self.clusterLabel.setVisible(False)
         self.clusterComboBox.setVisible(False)
+        self.status = self.findChild(QLabel, 'status')
+        self.timeElapsed = self.findChild(QLineEdit, 'timeElapsed')
         self.pageInfo = self.findChild(QWidget, 'pageInfo')
         self.pageSummary = self.findChild(QPlainTextEdit)
         self.fromLineEdit = self.findChild(QLineEdit, 'fromLineEdit')
@@ -161,6 +164,9 @@ class MainWindow(QMainWindow):
         self.resumeBtn.setVisible(False)
         self.stopBtn.setVisible(False)
         self.pageInfo.setVisible(False)
+
+        self.crawlMode.crawlDoneSignal.connect(self.notifyCrawlDone)
+        self.crawlMode.statusUpdatedSignal.connect(self.updateStatus)
 
     def handleNew(self):
         pass
@@ -186,9 +192,10 @@ class MainWindow(QMainWindow):
             self.canvas.saveGraph(fileName)
 
     def handleSaveImage(self):
+        options = QFileDialog.Options()
         fileName, _ = QFileDialog.getSaveFileName(
             self, "Save As Image", "",
-            "All Files (*);;JPG Files (*.jpg)"
+            "All Files (*);;JPG Files (*.jpg)", options=options
         )
         if fileName != '':
             img = QPixmap(self.canvas.size())
@@ -316,11 +323,21 @@ class MainWindow(QMainWindow):
         self.pageInfo.setVisible(vis)
 
     def closeEvent(self, event):
-        self.crawlSettingDialog.close()
-        self.statDialog.close()
+        if self.crawlSettingDialog:
+            self.crawlSettingDialog.close()
+        if self.statDialog:
+            self.statDialog.close()
+        self.canvas.close()
         super().closeEvent(event)
 
     def notifyCrawlDone(self):
-        # TODO something
+        self.pauseBtn.setVisible(False)
+        self.resumeBtn.setVisible(False)
+        self.startBtn.setVisible(True)
+        self.stopBtn.setVisible(False)
         if self.crawlSettingDialog:
             self.crawlSettingDialog.notifyCrawlDone()
+
+    def updateStatus(self):
+        self.status.setText(self.crawlMode.status)
+        self.timeElapsed.setText(self.crawlMode.timeElapsedText())

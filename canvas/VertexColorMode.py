@@ -45,7 +45,7 @@ class VertexColorMode(Mode):
         g = self.canvas.g
         for mode in self.canvas.modes:
             if isinstance(mode, ViewMode):
-                g.vs['color'] = [mode.foregroundColor] * g.vcount()
+                g.vs['color'] = [mode.foregroundLineColor] * g.vcount()
 
     def onSetGraph(self):
         self.applyColor()

@@ -26,10 +26,10 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>-10</x>
+      <x>0</x>
       <y>40</y>
-      <width>1081</width>
-      <height>791</height>
+      <width>1071</width>
+      <height>651</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="canvasBox">
@@ -82,7 +82,8 @@
      <bool>true</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(83, 83, 83)</string>
+     <string notr="true">background-color: rgb(83, 83, 83);
+color: #eee</string>
     </property>
     <widget class="QToolButton" name="zoomInBtn">
      <property name="geometry">
@@ -547,6 +548,70 @@ background-color: #383838;
 border-radius: 3px;
 border-image: url(&quot;resource/gui/tool/resume.png&quot;);
 }</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>430</x>
+       <y>10</y>
+       <width>51</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-weight: bold</string>
+     </property>
+     <property name="text">
+      <string>Status:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>610</x>
+       <y>10</y>
+       <width>101</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font-weight: bold</string>
+     </property>
+     <property name="text">
+      <string>Time elapsed:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="timeElapsed">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>720</x>
+       <y>6</y>
+       <width>171</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="status">
+     <property name="geometry">
+      <rect>
+       <x>490</x>
+       <y>10</y>
+       <width>101</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>ready</string>
      </property>
     </widget>
    </widget>

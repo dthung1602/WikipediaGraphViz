@@ -40,8 +40,9 @@ def wrapGraph(graph):
 
 
 class Canvas(QWidget):
-    POINT_RADIUS = 8
-    ARROW_SIZE = 6
+    POINT_RADIUS = 10
+    ARROW_SIZE = 8
+    SELECTED_ARROW_SIZE = 12
     SELECTED_POINT_RADIUS = 12
     LINE_DISTANCE = 2
     CURVE_SELECT_SQUARE_SIZE = 10
@@ -83,6 +84,12 @@ class Canvas(QWidget):
 
     def toAbsoluteY(self, y):
         return float(y / self.zoom + self.viewRect.y())
+
+    def close(self):
+        for mode in self.modes:
+            if mode.onClose():
+                break
+        super().close()
 
     def setGraph(self, g: Union[str, Graph]):
         if isinstance(g, str):
@@ -156,7 +163,8 @@ class Canvas(QWidget):
 
         self.updateViewRect()
 
-    def createArrow(self, start, end):
+    def createArrow(self, start, end, big=False):
+        arrowSize = self.SELECTED_ARROW_SIZE if big else self.ARROW_SIZE
         xStart = start.x()
         yStart = start.y()
         xEnd = end.x()
@@ -164,13 +172,13 @@ class Canvas(QWidget):
 
         baseVector = QVector2D(-xEnd + xStart, -yEnd + yStart)
         unitVector = baseVector / baseVector.length()
-        baseVector = unitVector * self.ARROW_SIZE
+        baseVector = unitVector * arrowSize
         a = atan2(baseVector.y(), baseVector.x())
         p = pi / 6
-        xb = self.ARROW_SIZE * cos(a - p)
-        yb = self.ARROW_SIZE * sin(a - p)
-        xc = self.ARROW_SIZE * cos(a + p)
-        yc = self.ARROW_SIZE * sin(a + p)
+        xb = arrowSize * cos(a - p)
+        yb = arrowSize * sin(a - p)
+        xc = arrowSize * cos(a + p)
+        yc = arrowSize * sin(a + p)
 
         xEnd += unitVector.x() * self.POINT_RADIUS / 2
         yEnd += unitVector.y() * self.POINT_RADIUS / 2

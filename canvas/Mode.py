@@ -1,7 +1,4 @@
-from abc import ABC
-
-
-class Mode(ABC):
+class Mode:
     conflict_modes = []
     priority = None
 
@@ -55,4 +52,7 @@ class Mode(ABC):
         pass
 
     def onMouseRelease(self, event):
+        pass
+
+    def onClose(self):
         pass

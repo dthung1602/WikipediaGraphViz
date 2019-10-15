@@ -125,7 +125,7 @@ class CrawlDialog(QMainWindow):
             getattr(self, attr).setDisabled(value)
 
     def handleStartStop(self):
-        if self.crawlMode.status == 'stopped':
+        if self.crawlMode.status in ['stopped', 'done']:
             settings = {
                 'language': AVAILABLE_WIKI_LANG[self.languageComboBox.currentIndex()][1],
                 'searchAlgo': 'DFS' if self.dfsRadio.isChecked() else 'BFS' if self.bfsRadio.isChecked() else 'RAND',
@@ -155,4 +155,6 @@ class CrawlDialog(QMainWindow):
             self.enableEdit(True)
 
     def notifyCrawlDone(self):
-        pass
+        self.startStopBtn.setText('Start')
+        self.pauseResumeBtn.setDisabled(True)
+        self.enableEdit(True)
