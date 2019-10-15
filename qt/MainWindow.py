@@ -2,13 +2,14 @@ from PyQt5 import uic
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+from igraph import Graph
 
 from canvas import *
 from .AboutUsDialog import AboutUsDialog
 from .CrawlDialog import CrawlDialog
 from .StatDialog import StatDialog
 
-DEFAULT_GRAPH = 'resource/graph/UsCarrier.graphml'
+DEFAULT_GRAPH = 'resource/graph/default.graphml'
 
 
 class MainWindow(QMainWindow):
@@ -17,7 +18,7 @@ class MainWindow(QMainWindow):
 
         uic.loadUi('resource/gui/GUI.ui', self)
 
-        self.setWindowIcon(QIcon('resource/gui/icon.ico'))
+        self.setWindowIcon(QIcon('resource/gui/image/wiki-logo.png'))
         self.setWindowTitle("Wikipedia Graph Viz")
         self.setWindowFlag(Qt.WindowMaximizeButtonHint, False)
 
@@ -52,6 +53,7 @@ class MainWindow(QMainWindow):
             self.canvas.addMode(m)
         self.canvas.setGraph(DEFAULT_GRAPH)
 
+        self.resumeAction = self.pauseAction = self.stopAction = self.startAction = None
         self.statDialog = self.crawlSettingDialog = None
         self.status = self.timeElapsed = None
         self.startBtn = self.stopBtn = self.pauseBtn = self.resumeBtn = None
@@ -89,11 +91,15 @@ class MainWindow(QMainWindow):
         self.findChild(QAction, 'actionGrayMode').triggered.connect(self.changeViewModeTo(GrayViewMode))
         self.findChild(QAction, 'actionDarkMode').triggered.connect(self.changeViewModeTo(DarkViewMode))
         # Crawl
-        # self.findChild(QAction, 'actionStartCrawling').triggered.connect(self.handleStartCrawling)
-        # self.findChild(QAction, 'actionStopCrawling').triggered.connect(self.handleStartStop)
-        # self.findChild(QAction, 'actionPauseCrawling').triggered.connect(self.handlePauseResume)
-        # self.findChild(QAction, 'actionResumeCrawling').triggered.connect(self.handleResumeCrawling)
-        # self.findChild(QAction, 'actionCrawlSetting').triggered.connect(self.handleCrawlSetting)
+        self.startAction = self.findChild(QAction, 'actionStartCrawling')
+        self.startAction.triggered.connect(self.handleStart)
+        self.stopAction = self.findChild(QAction, 'actionStopCrawling')
+        self.stopAction.triggered.connect(self.handleStop)
+        self.pauseAction = self.findChild(QAction, 'actionPauseCrawling')
+        self.pauseAction.triggered.connect(self.handlePause)
+        self.resumeAction = self.findChild(QAction, 'actionResumeCrawling')
+        self.resumeAction.triggered.connect(self.handleResume)
+        self.findChild(QAction, 'actionCrawlSetting').triggered.connect(self.handleCrawlSetting)
         # Tools
         self.findChild(QAction, 'actionFindShortestPath').triggered.connect(self.handleFindShortestPath)
         self.findChild(QAction, 'actionSearch').triggered.connect(self.handleSearch)
@@ -154,22 +160,30 @@ class MainWindow(QMainWindow):
     def stuff(self):
         self.clusterLabel.setVisible(False)
         self.clusterComboBox.setVisible(False)
+
         self.status = self.findChild(QLabel, 'status')
         self.timeElapsed = self.findChild(QLineEdit, 'timeElapsed')
+
         self.pageInfo = self.findChild(QWidget, 'pageInfo')
+        self.pageInfo.setVisible(False)
+
         self.pageSummary = self.findChild(QPlainTextEdit)
         self.fromLineEdit = self.findChild(QLineEdit, 'fromLineEdit')
         self.toLineEdit = self.findChild(QLineEdit, 'toLineEdit')
+
         self.pauseBtn.setVisible(False)
+        self.pauseAction.setEnabled(False)
         self.resumeBtn.setVisible(False)
+        self.resumeAction.setEnabled(False)
         self.stopBtn.setVisible(False)
-        self.pageInfo.setVisible(False)
+        self.stopAction.setEnabled(False)
 
         self.crawlMode.crawlDoneSignal.connect(self.notifyCrawlDone)
         self.crawlMode.statusUpdatedSignal.connect(self.updateStatus)
 
     def handleNew(self):
-        pass
+        self.canvas.setGraph(Graph(directed=True))
+        self.canvas.update()
 
     def handleOpenFile(self):
         options = QFileDialog.Options()
@@ -187,7 +201,6 @@ class MainWindow(QMainWindow):
             self, "Save As", "",
             "GraphML Files (*.graphml)", options=options
         )
-
         if fileName:
             self.canvas.saveGraph(fileName)
 
@@ -223,26 +236,38 @@ class MainWindow(QMainWindow):
 
     def handlePause(self):
         self.pauseBtn.setVisible(False)
+        self.pauseAction.setEnabled(False)
         self.resumeBtn.setVisible(True)
+        self.resumeAction.setEnabled(True)
         self.crawlMode.pause()
 
     def handleResume(self):
         self.pauseBtn.setVisible(True)
+        self.pauseAction.setEnabled(True)
         self.resumeBtn.setVisible(False)
+        self.resumeAction.setEnabled(False)
         self.crawlMode.resume()
 
     def handleStart(self):
         self.pauseBtn.setVisible(True)
+        self.pauseAction.setEnabled(True)
         self.resumeBtn.setVisible(False)
+        self.resumeAction.setEnabled(False)
         self.startBtn.setVisible(False)
+        self.startAction.setEnabled(False)
         self.stopBtn.setVisible(True)
+        self.stopAction.setEnabled(True)
         self.crawlMode.start()
 
     def handleStop(self):
         self.pauseBtn.setVisible(False)
+        self.pauseAction.setEnabled(False)
         self.resumeBtn.setVisible(False)
+        self.resumeAction.setEnabled(False)
         self.startBtn.setVisible(True)
+        self.startAction.setEnabled(True)
         self.stopBtn.setVisible(False)
+        self.stopAction.setEnabled(False)
         self.crawlMode.stop()
 
     def handleCrawlSetting(self):

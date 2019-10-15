@@ -5,11 +5,14 @@ from threading import Thread, Lock
 from time import time, sleep
 
 import wikipedia
-from PyQt5.QtCore import pyqtSignal, QObject, Qt
+from PyQt5.QtCore import pyqtSignal, QObject
+from PyQt5.QtGui import QColor
 from igraph import Graph
 from wikipedia.exceptions import WikipediaException
 
 from .Mode import Mode
+
+WHITE = QColor(255, 255, 255)
 
 
 class CrawlMode(Mode, QObject):
@@ -146,15 +149,15 @@ class CrawlMode(Mode, QObject):
                 page=page,
                 x=self.canvas.WIDTH / 2,
                 y=self.canvas.HEIGHT / 2,
-                color=Qt.white
+                color=WHITE
             )
             newVertexIndex = g.vcount() - 1
             for v in g.vs:
                 if v.index != newVertexIndex and page.title in v['links']:
-                    g.add_edge(v.index, newVertexIndex, color=Qt.white)
+                    g.add_edge(v.index, newVertexIndex, color=WHITE)
             for v in g.vs:
                 if v.index != newVertexIndex and v['title'] in page.links:
-                    g.add_edge(newVertexIndex, v.index, color=Qt.white)
+                    g.add_edge(newVertexIndex, v.index, color=WHITE)
 
             # add to crawl
             if self.searchAlgo == 'DFS':

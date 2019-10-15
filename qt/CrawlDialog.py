@@ -29,7 +29,7 @@ class CrawlDialog(QMainWindow):
         self.crawlMode = crawlMode
 
         loadUi('resource/gui/CrawlDialog.ui', self)
-        self.setWindowIcon(QIcon('resource/gui/icon.ico'))
+        self.setWindowIcon(QIcon('resource/gui/image/wiki-logo.png'))
         self.setWindowTitle("WikipediaGraphViz - Crawl")
 
         self.languageComboBox = self.findChild(QComboBox, 'languageComboBox')

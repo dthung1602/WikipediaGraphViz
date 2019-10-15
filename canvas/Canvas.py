@@ -111,7 +111,10 @@ class Canvas(QWidget):
 
     def saveGraph(self, fileName):
         g = self.g.copy()
-        # TODO preprocess
+        del g.vs['pos']
+        del g.es['line']
+        g.vs['color'] = [c.name() for c in g.vs['color']]
+        g.es['color'] = [c.name() for c in g.es['color']]
         g.write_graphml(fileName)
 
     def addMode(self, mode: Mode):

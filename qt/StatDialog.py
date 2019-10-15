@@ -18,7 +18,7 @@ class StatDialog(QWidget):
         super().__init__()
         self.canvas = canvas
         loadUi('resource/gui/StatDialog.ui', self)
-        self.setWindowIcon(QIcon('resource/gui/icon.ico'))
+        self.setWindowIcon(QIcon('resource/gui/image/wiki-logo.png'))
         self.setWindowTitle("WikipediaGraphViz - Statistics")
 
         self.availableAttributes = self.getAvailableAttributes()

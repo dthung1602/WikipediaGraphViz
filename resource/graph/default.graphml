@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns
+         http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+<!-- Created by igraph -->
+  <key id="v_color" for="node" attr.name="color" attr.type="string"/>
+  <key id="v_pagerank" for="node" attr.name="pagerank" attr.type="double"/>
+  <key id="v_pagerankRelative" for="node" attr.name="pagerankRelative" attr.type="double"/>
+  <key id="v_closeness" for="node" attr.name="closeness" attr.type="double"/>
+  <key id="v_closenessRelative" for="node" attr.name="closenessRelative" attr.type="double"/>
+  <key id="v_betweenness" for="node" attr.name="betweenness" attr.type="double"/>
+  <key id="v_betweennessRelative" for="node" attr.name="betweennessRelative" attr.type="double"/>
+  <key id="v_evcent" for="node" attr.name="evcent" attr.type="double"/>
+  <key id="v_evcentRelative" for="node" attr.name="evcentRelative" attr.type="double"/>
+  <key id="v_x" for="node" attr.name="x" attr.type="double"/>
+  <key id="v_y" for="node" attr.name="y" attr.type="double"/>
+  <key id="v_title" for="node" attr.name="title" attr.type="string"/>
+  <key id="v_pageid" for="node" attr.name="pageid" attr.type="string"/>
+  <key id="v_summary" for="node" attr.name="summary" attr.type="string"/>
+  <key id="v_wordCount" for="node" attr.name="wordCount" attr.type="double"/>
+  <key id="v_refCount" for="node" attr.name="refCount" attr.type="double"/>
+  <key id="v_imgCount" for="node" attr.name="imgCount" attr.type="double"/>
+  <key id="v_catCount" for="node" attr.name="catCount" attr.type="double"/>
+  <key id="e_color" for="edge" attr.name="color" attr.type="string"/>
+  <graph id="G" edgedefault="directed">
+    <node id="n0">
+      <data key="v_color">#ffff42</data>
+      <data key="v_pagerank">0.0271752</data>
+      <data key="v_pagerankRelative">0</data>
+      <data key="v_closeness">0.171053</data>
+      <data key="v_closenessRelative">11</data>
+      <data key="v_betweenness">0</data>
+      <data key="v_betweennessRelative">0</data>
+      <data key="v_evcent">0</data>
+      <data key="v_evcentRelative">0</data>
+      <data key="v_x">873.358</data>
+      <data key="v_y">325</data>
+      <data key="v_title">Archipelagoes of Patagonia</data>
+      <data key="v_pageid">35295077</data>
+      <data key="v_summary">The landmass known as Patagonia hosts a series of archipelagoes, all of them located on its western and southern coast. These archipelagoes, with the exception of Tierra del Fuego and some islands in Argentina&apos;s Atlantic Ocean, lie mainly in Chile and in the Pacific Ocean, covering about one third of Chile&apos;s coast.
+The United States Hydrographic Office, stated in its South America Pilot (1916):
+
+The Patagonian Archipelago, the range of islands lying west of Tierra del Fuego and stretching along the western coast of Patagonia for 11° of latitude north of the western entrance to Magellan Strait, is about as inhospitable a land as is to be found in the globe, especially in its more southern parts. The land is mountainous, presenting an alternation of matted forest, bare rock, and deep bogs, and is cut up by deep channels into peninsulas and islands whose forms are yet very imperfectly known. Drenching rains, varied by snow and sleet, prevail throughout the year, while furious westerly gales succeed each other with rapidity. The scenery is magnificently stern, but is seldom seen to advantage, the clouds and mists usually screening the higher peaks and snow fields. Glaciers, however, extend in many places either nearly or quite to the level of the sea. In such a climate life is scarce, sea fowl and a few wild fowl being the main representatives of the animal kingdom.The scenery in the western portion of the Strait is grand and savage. The snow-capped peaks supply ice and snow for numerous glaciers, which descend nearly to the sea in some places, and frequently crown the precipices. Many waterfalls and cascades, some of which are of great height, fall into the bays, furnishing scenery that rivals the fiords of Norway. It is unfortunate for the voyager in these parts that the weather is such as to render exceptional an opportunity to witness this grandeur of the best advantage.
+
+The archipelagoes of Patagonia include:
+
+Guaitecas Archipelago
+Guayaneco Archipelago
+Chonos Archipelago
+Campana Archipelago
+Queen Adelaide Archipelago
+Tierra del Fuego Archipelago
+Hermite Islands
+Ildefonso Islands
+Wollaston Islands
+Diego Ramírez Islands
+
+</data>
+      <data key="v_wordCount">351</data>
+      <data key="v_refCount">2</data>
+      <data key="v_imgCount">2</data>
+      <data key="v_catCount">5</data>
+    </node>
+    <node id="n1">
+      <data key="v_color">#ffff42</data>
+      <data key="v_pagerank">0.0502742</data>
+      <data key="v_pagerankRelative">4</data>
+      <data key="v_closeness">0.19403</data>
+      <data key="v_closenessRelative">6</data>
+      <data key="v_betweenness">8</data>
+      <data key="v_betweennessRelative">4</data>
+      <data key="v_evcent">0</data>
+      <data key="v_evcentRelative">1</data>
+      <data key="v_x">840.345</data>
+      <data key="v_y">469.639</data>
+      <data key="v_title">Snow</data>
+      <data key="v_pageid">28191</data>
+      <data key="v_summary">Snow comprises individual ice crystals that grow while suspended in the atmosphere—usually within clouds—and then fall, accumulating on the ground where they undergo further changes. It consists of frozen crystalline water throughout its life cycle, starting when, under suitable conditions, the ice crystals form in the atmosphere, increase to millimeter size, precipitate and accumulate on surfaces, then metamorphose in place, and ultimately melt, slide or sublimate away. Snowstorms organize and develop by feeding on sources of atmospheric moisture and cold air. Snowflakes nucleate around particles in the atmosphere by attracting supercooled water droplets, which freeze in hexagonal-shaped crystals. Snowflakes take on a variety of shapes, basic among these are platelets, needles, columns and rime. As snow accumulates into a snowpack, it may blow into drifts. Over time, accumulated snow metamorphoses, by sintering, sublimation and freeze-thaw. Where the climate is cold enough for year-to-year accumulation, a glacier may form. Otherwise, snow typically melts seasonally, causing runoff into streams and rivers and recharging groundwater.
+Major snow-prone areas include the polar regions, the northernmost half of the Northern Hemisphere and mountainous regions worldwide with sufficient moisture and cold temperatures. In the Southern Hemisphere, snow is confined primarily to mountainous areas, apart from Antarctica.Snow affects such human activities as transportation: creating the need for keeping roadways, wings, and windows clear; agriculture: providing water to crops and safeguarding livestock; sports such as skiing, snowboarding, and snowmachine travel; and warfare. Snow affects ecosystems, as well, by providing an insulating layer during winter under which plants and animals are able to survive the cold.</data>
+      <data key="v_wordCount">256</data>
+      <data key="v_refCount">170</data>
+      <data key="v_imgCount">46</data>
+      <data key="v_catCount">18</data>
+    </node>
+    <node id="n2">
+      <data key="v_color">#ffff42</data>
+      <data key="v_pagerank">0.0485418</data>
+      <data key="v_pagerankRelative">11</data>
+      <data key="v_closeness">0.203125</data>
+      <data key="v_closenessRelative">13</data>
+      <data key="v_betweenness">12</data>
+      <data key="v_betweennessRelative">5</data>
+      <data key="v_evcent">0</data>
+      <data key="v_evcentRelative">2</data>
+      <data key="v_x">747.845</data>
+      <data key="v_y">585.63</data>
+      <data key="v_title">Infantry</data>
+      <data key="v_pageid">15068</data>
+      <data key="v_summary">Infantry is a military specialization that engages in military combat on foot, distinguished from cavalry, artillery, and tank forces. Also known as foot soldiers or infanteers, infantry traditionally relies on moving by foot between combats as well, but may also use mounts, military vehicles, or other transport. Infantry make up a large portion of all armed forces in most nations, and typically bear the largest brunt in warfare, as measured by casualties, deprivation, or physical and psychological stress.
+The first military forces in history were infantry. In antiquity, infantry were armed with an early melee weapon such as a spear, axe or sword, or an early ranged weapon like a javelin, sling, or bow, with a few infantrymen having both a melee and a ranged weapon. With the development of gunpowder, infantry began converting to primarily firearms. By the time of Napoleonic warfare, infantry, cavalry, and artillery formed a basic triad of ground forces, though infantry usually remained the most numerous. With armoured warfare, armoured fighting vehicles have replaced the horses of cavalry, and airpower has added a new dimension to ground combat, but infantry remains pivotal to all modern combined arms operations.
+Infantry have much greater local situational awareness than other military forces, due to their inherent intimate contact with the battlefield (&quot;boots on the ground&quot;); this is vital for engaging and infiltrating enemy positions, holding and defending ground (any military objectives), securing battlefield victories, maintaining military area control and security both at and behind the front lines, for capturing ordnance or materiel, taking prisoners, and military occupation. Infantry can more easily recognise, adapt and respond to local conditions, weather, and changing enemy weapons or tactics. They can operate in a wide range of terrain inaccessible to military vehicles, and can operate with a lower logistical burden. Infantry are the most easily delivered forces to ground combat areas, by simple and reliable marching, or by trucks, sea or air transport; they can also be inserted directly into combat by amphibious landing, or for air assault by parachute (airborne infantry) or helicopter (airmobile infantry). They can be augmented with a variety of crew-served weapons, armoured personnel carriers, and infantry fighting vehicles.</data>
+      <data key="v_wordCount">360</data>
+      <data key="v_refCount">39</data>
+      <data key="v_imgCount">23</data>
+      <data key="v_catCount">20</data>
+    </node>
+    <node id="n3">
+      <data key="v_color">#ffff42</data>
+      <data key="v_pagerank">0.0684358</data>
+      <data key="v_pagerankRelative">8</data>
+      <data key="v_closeness">0.220339</data>
+      <data key="v_closenessRelative">0</data>
+      <data key="v_betweenness">16</data>
+      <data key="v_betweennessRelative">6</data>
+      <data key="v_evcent">0</data>
+      <data key="v_evcentRelative">3</data>
+      <data key="v_x">614.179</data>
+      <data key="v_y">650</data>
+      <data key="v_title">Wartime sexual violence</data>
+      <data key="v_pageid">17572536</data>
+      <data key="v_summary">Wartime sexual violence is rape or other forms of sexual violence committed by combatants during armed conflict, war, or military occupation often as spoils of war; but sometimes, particularly in ethnic conflict, the phenomenon has broader sociological motives. Wartime sexual violence may also include gang rape and rape with objects. It is distinguished from sexual harassment, sexual assaults, and rape committed amongst troops in military service. It also covers the situation where girls and women are forced into prostitution or sexual slavery by an occupying power.
+During war and armed conflict, rape is frequently used as a means of psychological warfare in order to humiliate the enemy. Wartime sexual violence may occur in a variety of situations, including institutionalized sexual slavery, wartime sexual violence associated with specific battles or massacres, and individual or isolated acts of sexual violence.
+Rape can also be recognized as genocide or ethnic cleansing when committed with the intent to destroy, in whole or in part, a targeted group; however, rape remains widespread in conflict zones. There are other international legal instruments to prosecute perpetrators but this has occurred as late as the 1990s. However, these legal instruments have so far only been used for international conflicts, thus putting the burden of proof in citing the international nature of conflict in order for prosecution to proceed.</data>
+      <data key="v_wordCount">219</data>
+      <data key="v_refCount">247</data>
+      <data key="v_imgCount">14</data>
+      <data key="v_catCount">33</data>
+    </node>
+    <node id="n4">
+      <data key="v_color">#ffff42</data>
+      <data key="v_pagerank">0.0271752</data>
+      <data key="v_pagerankRelative">2</data>
+      <data key="v_closeness">0.183099</data>
+      <data key="v_closenessRelative">4</data>
+      <data key="v_betweenness">0</data>
+      <data key="v_betweennessRelative">8</data>
+      <data key="v_evcent">0</data>
+      <data key="v_evcentRelative">4</data>
+      <data key="v_x">465.821</data>
+      <data key="v_y">650</data>
+      <data key="v_title">Meal, Ready-to-Eat</data>
+      <data key="v_pageid">202437</data>
+      <data key="v_summary">The Meal, Ready-to-Eat – commonly known as the MRE – is a self-contained, individual field ration in lightweight packaging bought by the United States Department of Defense for its service members for use in combat or other field conditions where organized food facilities are not available. While MREs should be kept cool, they do not need to be refrigerated. MREs replaced the canned MCI, or Meal, Combat, Individual rations, in 1981, and is the intended successor to the lighter LRP ration developed by the United States Army for Special Forces and Ranger patrol units in Vietnam. MREs have also been distributed to civilians during natural disasters.</data>
+      <data key="v_wordCount">105</data>
+      <data key="v_refCount">52</data>
+      <data key="v_imgCount">17</data>
+      <data key="v_catCount">9</data>
+    </node>
+    <node id="n5">
+      <data key="v_color">#ffff42</data>
+      <data key="v_pagerank">0.0910309</data>
+      <data key="v_pagerankRelative">1</data>
+      <data key="v_closeness">0.209677</data>
+      <data key="v_closenessRelative">9</data>
+      <data key="v_betweenness">0</data>
+      <data key="v_betweennessRelative">9</data>
+      <data key="v_evcent">0</data>
+      <data key="v_evcentRelative">5</data>
+      <data key="v_x">332.155</data>
+      <data key="v_y">585.63</data>
+      <data key="v_title">USA Today</data>
+      <data key="v_pageid">208463</data>
+      <data key="v_summary">USA Today is an internationally distributed American daily, middle-market newspaper that serves as the flagship publication of its owner, the Gannett Company. The newspaper has a generally centrist audience. Founded by Al Neuharth on September 15, 1982, it operates from Gannett&apos;s corporate headquarters on Jones Branch Drive, in McLean, Virginia. It is printed at 37 sites across the United States and at five additional sites internationally. Its dynamic design influenced the style of local, regional, and national newspapers worldwide, through its use of concise reports, colorized images, informational graphics, and inclusion of popular culture stories, among other distinct features.With a weekly print circulation of 726,906, a digital only subscriber base of 504,000, and an approximate daily readership of 2.6 million, USA Today shares the position of having the widest circulation of any newspaper in the United States with The Wall Street Journal and The New York Times. USA Today is distributed in all 50 states, the District of Columbia, and Puerto Rico, and an international edition is distributed in Asia, Canada, Europe, and the Pacific Islands.</data>
+      <data key="v_wordCount">175</data>
+      <data key="v_refCount">95</data>
+      <data key="v_imgCount">11</data>
+      <data key="v_catCount">28</data>
+    </node>
+    <node id="n6">
+      <data key="v_color">#ffff42</data>
+      <data key="v_pagerank">0.181168</data>
+      <data key="v_pagerankRelative">9</data>
+      <data key="v_closeness">0.0769231</data>
+      <data key="v_closenessRelative">10</data>
+      <data key="v_betweenness">0</data>
+      <data key="v_betweennessRelative">10</data>
+      <data key="v_evcent">0</data>
+      <data key="v_evcentRelative">6</data>
+      <data key="v_x">239.655</data>
+      <data key="v_y">469.639</data>
+      <data key="v_title">Cold shock response</data>
+      <data key="v_pageid">17484978</data>
+      <data key="v_summary">Cold shock response is the physiological response of organisms to sudden cold, especially cold water.
+In animals, cold shock response is perhaps the most common cause of death from immersion in very cold water, such as by falling through thin ice. The immediate shock of the cold causes involuntary inhalation, which if underwater can result in drowning. The cold water can also cause heart attack due to vasoconstriction; the heart has to work harder to pump the same volume of blood throughout the body.  For people with existing cardiovascular disease, the additional workload can result in cardiac arrest.  Inhalation of water (and thus drowning) may result from hyperventilation. Some people are much better able to survive swimming in very cold water due to body or mental conditioning.Hypothermia from exposure to cold water is not as sudden as is often believed. A person who survives the initial minute of trauma (after falling into icy water), can survive for at least thirty minutes provided they don&apos;t drown. However, the ability to perform useful work (for example to save oneself) declines substantially after ten minutes (as the body protectively cuts off blood flow to &quot;non-essential&quot; muscles).</data>
+      <data key="v_wordCount">194</data>
+      <data key="v_refCount">6</data>
+      <data key="v_imgCount">14</data>
+      <data key="v_catCount">12</data>
+    </node>
+    <node id="n7">
+      <data key="v_color">#ffff42</data>
+      <data key="v_pagerank">0.0917642</data>
+      <data key="v_pagerankRelative">10</data>
+      <data key="v_closeness">0.209677</data>
+      <data key="v_closenessRelative">12</data>
+      <data key="v_betweenness">14</data>
+      <data key="v_betweennessRelative">11</data>
+      <data key="v_evcent">0</data>
+      <data key="v_evcentRelative">7</data>
+      <data key="v_x">206.642</data>
+      <data key="v_y">325</data>
+      <data key="v_title">Democratic Republic of the Congo</data>
+      <data key="v_pageid">76762</data>
+      <data key="v_summary">The Democratic Republic of the Congo (pronunciation  French: République démocratique du Congo [kɔ̃ɡo]), also known as DR Congo, the DRC, DROC, Congo-Kinshasa, or simply the Congo, is a country located in Central Africa. It is sometimes anachronistically referred to by its former name of Zaire, which was its official name between 1971 and 1997. It is, by area, the largest country in sub-Saharan Africa, the second-largest in all of Africa (after Algeria), and the 11th-largest in the world. With a population of over 78 million, the Democratic Republic of the Congo is the most populous officially Francophone country, the fourth-most-populous country in Africa, and the 16th-most-populous country in the world. Eastern DR Congo has been the scene of ongoing military conflict in Kivu, since 2015.
+Centred on the Congo Basin, the territory of the DRC was first inhabited by Central African foragers around 90,000 years ago and was reached by the Bantu expansion about 3,000 years ago. In the west, the Kingdom of Kongo ruled around the mouth of the Congo River from the 14th to 19th centuries. In the centre and east, the kingdoms of Luba and Lunda ruled from the 16th and 17th centuries to the 19th century.
+In the 1870s, just before the onset of the Scramble for Africa, European exploration of the Congo Basin was carried out, first led by Henry Morton Stanley under the sponsorship of Leopold II of Belgium. Leopold formally acquired rights to the Congo territory at the Berlin Conference in 1885 and made the land his private property, naming it the Congo Free State. During the Free State, his colonial military unit, the Force Publique, forced the local population to produce rubber. From 1885 to 1908, millions of the Kongo people died as a consequence of disease and exploitation. In 1908, Belgium, despite initial reluctance, formally annexed the Free State, which became known as the Belgian Congo.
+The Belgian Congo achieved independence on 30 June 1960 under the name Republic of the Congo. Congolese nationalist Patrice Lumumba was elected the first Prime Minister, while Joseph Kasa-Vubu became the first President. Conflict arose over the administration of the territory, which became known as the Congo Crisis. The provinces of Katanga, under Moïse Tshombe, and South Kasai attempted to secede. After Lumumba turned to the Soviet Union for assistance in the crisis, the U.S. and Belgium became wary and oversaw his removal from office by Kasa-Vubu on 5 September and ultimate execution by Belgian-led Katangese troops on 17 January 1961. On 25 November 1965, Army Chief of Staff Joseph-Désiré Mobutu, who later renamed himself Mobutu Sese Seko, officially came into power through a coup d&apos;état. In 1971, he renamed the country Zaire. The country was run as a dictatorial one-party state, with his Popular Movement of the Revolution as the sole legal party. Mobutu&apos;s government received considerable support from the United States, due to its anti-communist stance during the Cold War. By the early 1990s, Mobutu&apos;s government began to weaken. Destabilisation in the east resulting from the 1994 Rwandan genocide and disenfranchisement among the eastern Banyamulenge (Congolese Tutsi) population led to a 1996 invasion led by Tutsi FPR-ruled Rwanda, which began the First Congo War.On 17 May 1997, Laurent-Désiré Kabila, a leader of Tutsi forces from the province of South Kivu, became President after Mobutu fled to Morocco, reverting the country&apos;s name to the Democratic Republic of the Congo. Tensions between President Kabila and the Rwandan and Tutsi presence in the country led to the Second Congo War from 1998 to 2003. Ultimately, nine African countries and around twenty armed groups became involved in the war, which resulted in the deaths of 5.4 million people. The two wars devastated the country. President Laurent-Désiré Kabila was assassinated by one of his bodyguards on 16 January 2001 and was succeeded eight days later as President by his son Joseph.
+The Democratic Republic of the Congo is extremely rich in natural resources but has had political instability, a lack of infrastructure, issues with corruption and centuries of both commercial and colonial extraction and exploitation with little holistic development. Besides the capital Kinshasa, the two next largest cities Lubumbashi and Mbuji-Mayi are both mining communities. DR Congo&apos;s largest export is raw minerals, with China accepting over 50% of DRC&apos;s exports in 2012. In 2016, DR Congo&apos;s level of human development was ranked 176th out of 187 countries by the Human Development Index. As of 2018, around 600,000 Congolese have fled to neighbouring countries from conflicts in the centre and east of the DRC. Two million children risk starvation, and the fighting has displaced 4.5 million people. The sovereign state is a member of the United Nations, Non-Aligned Movement, African Union, and COMESA.</data>
+      <data key="v_wordCount">784</data>
+      <data key="v_refCount">414</data>
+      <data key="v_imgCount">74</data>
+      <data key="v_catCount">61</data>
+    </node>
+    <node id="n8">
+      <data key="v_color">#ffff42</data>
+      <data key="v_pagerank">0.0465654</data>
+      <data key="v_pagerankRelative">12</data>
+      <data key="v_closeness">0.191176</data>
+      <data key="v_closenessRelative">8</data>
+      <data key="v_betweenness">0</data>
+      <data key="v_betweennessRelative">12</data>
+      <data key="v_evcent">0</data>
+      <data key="v_evcentRelative">8</data>
+      <data key="v_x">239.655</data>
+      <data key="v_y">180.361</data>
+      <data key="v_title">Hors de combat</data>
+      <data key="v_pageid">4703091</data>
+      <data key="v_summary">Hors de combat (French: [ɔʁ də kɔ̃ba]; lit. &quot;out of combat&quot;) is a French term used in diplomacy and international law to refer to persons who are incapable of performing their ability to wage war. Examples include fighter pilots or aircrews parachuting from their disabled aircraft, as well as the sick, wounded, detained, or otherwise disabled. Persons hors de combat are normally granted special protections according to the laws of war, sometimes including prisoner-of-war status, and therefore officially become non-combatants. 
+Under the 1949 Geneva Conventions, unlawful combatants hors de combat are granted the same privilege and to be treated with humanity while in captivity but unlike lawful combatants, they are subject to civilian trial and punishment (which may include capital punishment if the detaining power has such a punishment for the crimes they have committed).
+Protocol I to the Geneva Conventions defines:
+
+A person is hors de combat if:
+
+(a) he is in the power of an adverse Party;
+(b) he clearly expresses an intention to surrender; or
+(c) he has been rendered unconscious or is otherwise incapacitated by wounds or sickness, and therefore is incapable of defending himself;provided that in any of these cases he abstains from any hostile act and does not attempt to escape.</data>
+      <data key="v_wordCount">209</data>
+      <data key="v_refCount">2</data>
+      <data key="v_imgCount">1</data>
+      <data key="v_catCount">5</data>
+    </node>
+    <node id="n9">
+      <data key="v_color">#ffff42</data>
+      <data key="v_pagerank">0.0531751</data>
+      <data key="v_pagerankRelative">3</data>
+      <data key="v_closeness">0.183099</data>
+      <data key="v_closenessRelative">1</data>
+      <data key="v_betweenness">0</data>
+      <data key="v_betweennessRelative">13</data>
+      <data key="v_evcent">0</data>
+      <data key="v_evcentRelative">9</data>
+      <data key="v_x">332.155</data>
+      <data key="v_y">64.3702</data>
+      <data key="v_title">Conservation status</data>
+      <data key="v_pageid">1928089</data>
+      <data key="v_summary">The conservation status of a group of organisms (for instance, a species) indicates whether the group still exists and how likely the group is to become extinct in the near future. Many factors are taken into account when assessing conservation status: not simply the number of individuals remaining, but the overall increase or decrease in the population over time, breeding success rates, and known threats.  Various systems of conservation status exist and are in use at international, multi-country, national and local levels as well as for consumer use.</data>
+      <data key="v_wordCount">88</data>
+      <data key="v_refCount">20</data>
+      <data key="v_imgCount">9</data>
+      <data key="v_catCount">12</data>
+    </node>
+    <node id="n10">
+      <data key="v_color">#ffff42</data>
+      <data key="v_pagerank">0.0531751</data>
+      <data key="v_pagerankRelative">5</data>
+      <data key="v_closeness">0.183099</data>
+      <data key="v_closenessRelative">2</data>
+      <data key="v_betweenness">0</data>
+      <data key="v_betweennessRelative">1</data>
+      <data key="v_evcent">0</data>
+      <data key="v_evcentRelative">10</data>
+      <data key="v_x">465.821</data>
+      <data key="v_y">0</data>
+      <data key="v_title">Greece</data>
+      <data key="v_pageid">12108</data>
+      <data key="v_summary">Greece, officially the Hellenic Republic (Greek: Ελληνική Δημοκρατία), also known as Hellas (Greek: Ελλάς), is a country located in Southeast Europe. Its population is approximately 10.7 million as of 2018; Athens is the nation&apos;s capital and largest city, followed by Thessaloniki.
+Situated on the southern tip of the Balkan Peninsula, Greece is located at the crossroads of Europe, Asia, and Africa. It shares land borders with Albania to the northwest, North Macedonia and Bulgaria to the north, and Turkey to the northeast. The Aegean Sea lies to the east of the mainland, the Ionian Sea to the west, the Cretan Sea and the Mediterranean Sea to the south. Greece has the longest coastline on the Mediterranean Basin and the 11th longest coastline in the world at 13,676 km (8,498 mi) in length, featuring many islands, of which 227 are inhabited. Eighty percent of Greece is mountainous, with Mount Olympus being the highest peak at 2,918 metres (9,573 ft). The country consists of nine geographic regions: Macedonia, Central Greece, the Peloponnese, Thessaly, Epirus, the Aegean Islands (including the Dodecanese and Cyclades), Thrace, Crete, and the Ionian Islands.
+Greece is considered the cradle of Western civilisation, being the birthplace of democracy, Western philosophy, Western literature, historiography, political science, major scientific and mathematical principles, Western drama and notably the Olympic Games. From the eighth century B.C., the Greeks were organised into various independent city-states, known as poleis (singular polis), which spanned the entire Mediterranean region and the Black Sea. Philip of Macedon united most of the Greek mainland in the fourth century BC, with his son Alexander the Great rapidly conquering much of the ancient world, from the eastern Mediterranean to India. Greece was annexed by Rome in the second century B.C., becoming an integral part of the Roman Empire and its successor, the Byzantine Empire, which adopted the Greek language and culture. The Greek Orthodox Church, which emerged in the first century A.D., helped shape modern Greek identity and transmitted Greek traditions to the wider Orthodox World. Falling under Ottoman dominion in the mid-15th century, the modern nation state of Greece emerged in 1830 following a war of independence.
+The sovereign state of Greece is a unitary parliamentary republic and developed country with an advanced high-income economy, a high quality of life, and a very high standard of living. Its economy is the largest in the Balkans, where it is an important regional investor. A founding member of the United Nations, Greece was the tenth member to join the European Communities (precursor to the European Union) and has been part of the Eurozone since 2001. It is also a member of numerous other international institutions, including the Council of Europe, the North Atlantic Treaty Organization (NATO), the Organisation for Economic Co-operation and Development (OECD), the World Trade Organization (WTO), the Organization for Security and Co-operation in Europe (OSCE), and the Organisation internationale de la Francophonie (OIF).
+Greece&apos;s unique cultural heritage, large tourism industry, prominent shipping sector and geostrategic importance classify it as a middle power.  The country&apos;s rich historical legacy is reflected in part by its 18 UNESCO World Heritage Sites.</data>
+      <data key="v_wordCount">519</data>
+      <data key="v_refCount">386</data>
+      <data key="v_imgCount">182</data>
+      <data key="v_catCount">54</data>
+    </node>
+    <node id="n11">
+      <data key="v_color">#ffff42</data>
+      <data key="v_pagerank">0.0271752</data>
+      <data key="v_pagerankRelative">7</data>
+      <data key="v_closeness">0.0714286</data>
+      <data key="v_closenessRelative">5</data>
+      <data key="v_betweenness">0</data>
+      <data key="v_betweennessRelative">2</data>
+      <data key="v_evcent">0</data>
+      <data key="v_evcentRelative">11</data>
+      <data key="v_x">614.179</data>
+      <data key="v_y">0</data>
+      <data key="v_title">French Expeditionary Corps (1943–44)</data>
+      <data key="v_pageid">11575528</data>
+      <data key="v_summary">The French Expeditionary Corps (French: Corps Expéditionnaire Français, CEF), also known as the French Expeditionary Corps in Italy (French: Corps Expéditionaire Français en Italie, CEFI), was an expeditionary force composed of Free French soldiers that fought in the Italian Campaign during World War II under the command of Général de corps d&apos;armée Alphonse Juin.</data>
+      <data key="v_wordCount">53</data>
+      <data key="v_refCount">11</data>
+      <data key="v_imgCount">4</data>
+      <data key="v_catCount">6</data>
+    </node>
+    <node id="n12">
+      <data key="v_color">#ffff42</data>
+      <data key="v_pagerank">0.0531751</data>
+      <data key="v_pagerankRelative">6</data>
+      <data key="v_closeness">0.183099</data>
+      <data key="v_closenessRelative">7</data>
+      <data key="v_betweenness">0</data>
+      <data key="v_betweennessRelative">7</data>
+      <data key="v_evcent">0</data>
+      <data key="v_evcentRelative">12</data>
+      <data key="v_x">747.845</data>
+      <data key="v_y">64.3702</data>
+      <data key="v_title">Somalia</data>
+      <data key="v_pageid">27358</data>
+      <data key="v_summary">Somalia ( sə-MAH-lee-ə; Somali: Soomaaliya; Arabic: الصومال‎, romanized: aṣ-Ṣūmāl), officially the Federal Republic of Somalia (Somali: Jamhuuriyadda Federaalka Soomaaliya; Arabic: جمهورية الصومال الفيدرالية‎, romanized: Jumhūrīyat aṣ-Ṣūmāl al-Fīdirālīyah), is a country located in the Horn of Africa. It is bordered by Ethiopia to the west, Djibouti to the northwest, the Gulf of Aden to the north, the Guardafui Channel and Somali Sea to the east, and Kenya to the southwest. Somalia has the longest coastline on Africa&apos;s mainland, and its terrain consists mainly of plateaus, plains and highlands. Climatically, hot conditions prevail year-round, with periodic monsoon winds and irregular rainfall.Somalia has an estimated population of around 14.3 million., and has been described as the most culturally homogeneous country in Africa. Around 85% of its residents are ethnic Somalis, who have historically inhabited the northern part of the country. Ethnic minorities are largely concentrated in the southern regions. The official languages of Somalia are Somali and Arabic. Most people in the country are Muslims, the majority of which belong to the Sunni sect of Islam.In antiquity, Somalia was an important commercial centre. It is among the most probable locations of the fabled ancient Land of Punt. During the Middle Ages, several powerful Somali empires dominated the regional trade, including the Ajuran Empire, the Adal Sultanate, the Warsangali Sultanate, and the Sultanate of the Geledi. The toponym Somalia was coined by the Italian explorer Luigi Robecchi Bricchetti (1855–1926).In the late 19th century, the British and Italian empires established the colonies of British Somaliland and Italian Somaliland. In the interior, Mohammed Abdullah Hassan&apos;s Darwiish repelled the British four times, forcing a retreat to the coast, before succumbing in the Somaliland campaign (1920). Italy acquired full control of the northeastern, central and southern parts of the area after successfully waging the Campaign of the Sultanates against the ruling Majeerteen Sultanate and Sultanate of Hobyo. In 1960, the two regions united to form the independent Somali Republic under a civilian government.The Supreme Revolutionary Council seized power in 1969 and established the Somali Democratic Republic, which collapsed in 1991 as the Somali Civil War broke out. During this period most regions returned to customary and religious law. The early 2000s saw the creation of interim federal administrations. The Transitional National Government (TNG) was established in 2000, followed by the formation of the Transitional Federal Government (TFG) in 2004, which reestablished the military. In 2006, the TFG assumed control of most of the nation&apos;s southern conflict zones from the newly formed Islamic Courts Union (ICU). The ICU subsequently splintered into more radical groups such as Al-Shabaab, which battled the TFG and its AMISOM allies for control of the region.By mid-2012, the insurgents had lost most of the territory that they had seized, and a search for more permanent democratic institutions began. A new provisional constitution was passed in August 2012, which reformed Somalia as a federation. The same month, the Federal Government of Somalia was formed and a period of reconstruction began in Mogadishu. Somalia has maintained an informal economy, mainly based on livestock, remittances from Somalis working abroad, and telecommunications. It is a member of the United Nations, the Arab League, African Union, Non-Aligned Movement and the Organisation of Islamic Cooperation.</data>
+      <data key="v_wordCount">533</data>
+      <data key="v_refCount">331</data>
+      <data key="v_imgCount">88</data>
+      <data key="v_catCount">55</data>
+    </node>
+    <node id="n13">
+      <data key="v_color">#ffff42</data>
+      <data key="v_pagerank">0.181168</data>
+      <data key="v_pagerankRelative">13</data>
+      <data key="v_closeness">0.0769231</data>
+      <data key="v_closenessRelative">3</data>
+      <data key="v_betweenness">0</data>
+      <data key="v_betweennessRelative">3</data>
+      <data key="v_evcent">0</data>
+      <data key="v_evcentRelative">13</data>
+      <data key="v_x">840.345</data>
+      <data key="v_y">180.361</data>
+      <data key="v_title">SS Walter L M Russ</data>
+      <data key="v_pageid">27534819</data>
+      <data key="v_summary">Walter L M Russ was a 1,538 GRT cargo ship that was built in 1927 by Neptun AG, Rostock, Germany for Ernst Russ. In 1945, she was seized by the Allies and passed to the Ministry of War Transport (MoWT). It was intended that she would be renamed Empire Concourse but she ran aground on 15 July 1945 at Grassholm in St George&apos;s Channel, and was wrecked.</data>
+      <data key="v_wordCount">66</data>
+      <data key="v_refCount">7</data>
+      <data key="v_imgCount">25</data>
+      <data key="v_catCount">16</data>
+    </node>
+    <node id="n14">
+      <data key="v_color">#ffffff</data>
+      <data key="v_x">540</data>
+      <data key="v_y">325</data>
+      <data key="v_title">None</data>
+      <data key="v_pageid">None</data>
+      <data key="v_summary">None</data>
+    </node>
+    <edge source="n0" target="n1">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n1" target="n2">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n2" target="n3">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n1" target="n5">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n3" target="n5">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n4" target="n5">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n3" target="n7">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n3" target="n8">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n7" target="n9">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n7" target="n10">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n7" target="n12">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n12" target="n7">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n6" target="n13">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n13" target="n6">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n7" target="n14">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n9" target="n14">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n12" target="n14">
+      <data key="e_color">#ffffff</data>
+    </edge>
+    <edge source="n14" target="n12">
+      <data key="e_color">#ffffff</data>
+    </edge>
+  </graph>
+</graphml>

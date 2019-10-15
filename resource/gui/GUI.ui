@@ -651,7 +651,7 @@ border-image: url(&quot;resource/gui/tool/resume.png&quot;);
         <string notr="true">color: white;</string>
        </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="summaryTab">
         <attribute name="title">
@@ -1357,16 +1357,21 @@ margin-bottom: 10px</string>
     <addaction name="actionZoomIn"/>
     <addaction name="actionZoomOut"/>
     <addaction name="actionResetZoom"/>
+    <addaction name="separator"/>
     <addaction name="menuView_Mode"/>
    </widget>
    <widget class="QMenu" name="menu_Tools">
     <property name="title">
      <string>&amp;Crawl</string>
     </property>
+    <addaction name="separator"/>
     <addaction name="actionCrawlSetting"/>
+    <addaction name="separator"/>
+    <addaction name="actionStartCrawling"/>
+    <addaction name="actionStopCrawling"/>
+    <addaction name="separator"/>
     <addaction name="actionResumeCrawling"/>
     <addaction name="actionPauseCrawling"/>
-    <addaction name="actionStopCrawling"/>
    </widget>
    <widget class="QMenu" name="menu_About">
     <property name="title">
@@ -1501,6 +1506,11 @@ margin-bottom: 10px</string>
   <action name="actionStopCrawling">
    <property name="text">
     <string>&amp;Stop</string>
+   </property>
+  </action>
+  <action name="actionStartCrawling">
+   <property name="text">
+    <string>Start</string>
    </property>
   </action>
  </widget>
