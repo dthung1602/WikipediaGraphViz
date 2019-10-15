@@ -139,7 +139,7 @@ class CrawlDialog(QMainWindow):
                 settings['maxPage'] = self.floatOrDefault('maxPage', 10)
             if self.maxDepthCheckBox.isChecked():
                 settings['maxDepth'] = self.floatOrDefault('maxDepth', 5)
-            if self.maxPageCheckBox.isChecked():
+            if self.timeLimitCheckBox.isChecked():
                 settings['timeLimit'] = self.floatOrDefault('timeLimit', 60 * 5)
 
             self.crawlMode.setCrawlSetting(**settings)

@@ -18,7 +18,10 @@ class CrawlMode(Mode):
         self.startTime = None
         self.terminate = None
         self.thread = self.pauseLock = None
-        self.language = self.searchAlgo = self.delay = self.startPage = None
+        self.language = 'en'
+        self.searchAlgo = 'RAND'
+        self.delay = 1
+        self.startPage = wikipedia.random()
         self.reachPage = self.maxPage = self.maxDepth = self.timeLimit = None
         self.toCrawl = None
         self.status = 'stopped'  # stopped, paused, running, done

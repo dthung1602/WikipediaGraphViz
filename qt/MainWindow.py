@@ -1,4 +1,4 @@
-from PyQt5 import uic, QtGui
+from PyQt5 import uic
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
         self.canvas.setGraph(DEFAULT_GRAPH)
 
         self.statDialog = self.crawlSettingDialog = None
-        self.startStopBtn = self.pauseResumeBtn = None
+        self.startBtn = self.stopBtn = self.pauseBtn = self.resumeBtn = None
         self.fromLineEdit = self.toLineEdit = None
         self.absoluteRadio = self.relativeRadio = self.clusterLabel = self.pageInfo = self.pageSummary = None
         self.clusterComboBox = self.colorVertexComboBox = self.filterVertexComboBox = self.layoutComboBox = None
@@ -106,10 +106,14 @@ class MainWindow(QMainWindow):
         self.findChild(QToolButton, 'zoomOutBtn').pressed.connect(self.handleZoomOut)
         self.findChild(QToolButton, 'zoomResetBtn').pressed.connect(self.handleResetZoom)
 
-        self.pauseResumeBtn = self.findChild(QToolButton, 'pauseResumeBtn')
-        self.pauseResumeBtn.pressed.connect(self.handlePauseResume)
-        self.startStopBtn = self.findChild(QToolButton, 'startStopBtn')
-        self.startStopBtn.pressed.connect(self.handleStartStop)
+        self.pauseBtn = self.findChild(QToolButton, 'pauseBtn')
+        self.pauseBtn.pressed.connect(self.handlePause)
+        self.resumeBtn = self.findChild(QToolButton, 'resumeBtn')
+        self.resumeBtn.pressed.connect(self.handleResume)
+        self.startBtn = self.findChild(QToolButton, 'startBtn')
+        self.startBtn.pressed.connect(self.handleStart)
+        self.stopBtn = self.findChild(QToolButton, 'stopBtn')
+        self.stopBtn.pressed.connect(self.handleStop)
         self.findChild(QToolButton, 'crawlSettingBtn').pressed.connect(self.handleCrawlSetting)
 
         self.findChild(QToolButton, 'showChartsBtn').pressed.connect(self.handleShowCharts)
@@ -153,6 +157,9 @@ class MainWindow(QMainWindow):
         self.pageSummary = self.findChild(QPlainTextEdit)
         self.fromLineEdit = self.findChild(QLineEdit, 'fromLineEdit')
         self.toLineEdit = self.findChild(QLineEdit, 'toLineEdit')
+        self.pauseBtn.setVisible(False)
+        self.resumeBtn.setVisible(False)
+        self.stopBtn.setVisible(False)
         self.pageInfo.setVisible(False)
 
     def handleNew(self):
@@ -207,19 +214,29 @@ class MainWindow(QMainWindow):
     def handleResetZoom(self):
         self.canvas.zoomReset()
 
-    def handlePauseResume(self):
-        if self.crawlMode.status == 'running':
-            self.crawlMode.pause()
-        else:
-            self.crawlMode.resume()
+    def handlePause(self):
+        self.pauseBtn.setVisible(False)
+        self.resumeBtn.setVisible(True)
+        self.crawlMode.pause()
 
-    def handleStartStop(self):
-        if self.crawlMode.status == 'stopped':
-            self.crawlMode.start()
-            self.pauseResumeBtn.setDisabled(False)
-        else:
-            self.crawlMode.stop()
-            self.pauseResumeBtn.setDisabled(True)
+    def handleResume(self):
+        self.pauseBtn.setVisible(True)
+        self.resumeBtn.setVisible(False)
+        self.crawlMode.resume()
+
+    def handleStart(self):
+        self.pauseBtn.setVisible(True)
+        self.resumeBtn.setVisible(False)
+        self.startBtn.setVisible(False)
+        self.stopBtn.setVisible(True)
+        self.crawlMode.start()
+
+    def handleStop(self):
+        self.pauseBtn.setVisible(False)
+        self.resumeBtn.setVisible(False)
+        self.startBtn.setVisible(True)
+        self.stopBtn.setVisible(False)
+        self.crawlMode.stop()
 
     def handleCrawlSetting(self):
         self.crawlSettingDialog = CrawlDialog(self.canvas, self.crawlMode)
@@ -305,4 +322,5 @@ class MainWindow(QMainWindow):
 
     def notifyCrawlDone(self):
         # TODO something
-        self.crawlSettingDialog.notifyCrawlDone()
+        if self.crawlSettingDialog:
+            self.crawlSettingDialog.notifyCrawlDone()
