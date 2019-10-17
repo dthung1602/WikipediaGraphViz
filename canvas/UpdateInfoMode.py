@@ -7,6 +7,15 @@ from numpy import argsort, mean
 from .Mode import Mode
 
 
+def formatFloat(f):
+    if isnan(f):
+        return '0'
+    s = str(float(f))
+    if 'e' in s:
+        return s[:5] + s[s.index('e'):]
+    return s[:s.index('.') + 5]
+
+
 class UpdateInfoMode(Mode, QObject):
     priority = 0
 
@@ -41,9 +50,9 @@ class UpdateInfoMode(Mode, QObject):
             'catCount': str(len(g['category'])),
             'diameter': str(g.diameter()),
             'radius': str(int(0 if isnan(g.radius()) else g.radius())),
-            'density': str(g.density())[:5],
-            'avgOutDeg': str(mean(g.outdegree()))[:5],
-            'avgInDeg': str(mean(g.indegree()))[:5],
+            'density': formatFloat(g.density()),
+            'avgOutDeg': formatFloat(mean(g.outdegree())),
+            'avgInDeg': formatFloat(mean(g.indegree()))
         }
         if len(self.canvas.selectedVertices) > 0:
             vertex = self.canvas.selectedVertices[-1]

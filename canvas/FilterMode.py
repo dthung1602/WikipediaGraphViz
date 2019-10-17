@@ -30,15 +30,15 @@ class FilterMode(Mode):
         if self.attr in ['outdegree', 'indegree']:
             shouldBeDrawn = lambda v: self.min <= getattr(v, self.attr)() <= self.max
         else:
-            shouldBeDrawn = lambda v: self.min <= v[self.attr] <= self.max
+            shouldBeDrawn = lambda v: False if v[self.attr] is None else self.min <= v[self.attr] <= self.max
         canvas = self.canvas
         toDraw = []
-        toHide = []
+        toHide = set()
         for v in canvas.g.vs:
             if shouldBeDrawn(v):
                 toDraw.append(v)
             else:
-                toHide.append(v.index)
+                toHide.add(v.index)
         canvas.verticesToDraw = toDraw
         toDraw = []
         for e in canvas.g.es:

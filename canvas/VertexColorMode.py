@@ -39,10 +39,10 @@ class VertexColorMode(Mode):
             self.applyColor()
 
     def onUnset(self):
-        g = self.canvas.g
         for mode in self.canvas.modes:
             if isinstance(mode, ViewMode):
-                g.vs['color'] = [mode.lineColor] * g.vcount()
+                mode.setVerticesColor()
+                return
 
     def onSetGraph(self):
         self.applyColor()

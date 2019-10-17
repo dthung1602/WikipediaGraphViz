@@ -11,8 +11,6 @@ LAYOUT_OPTIONS = [
     ['Large Graph', 'layout_lgl'],
     ['MDS', 'layout_mds'],
     ['Random', 'layout_random'],
-    # ['Reingold-Tilford', 'layout_reingold_tilford'],
-    # ['Reingold-Tilford Circular', 'layout_reingold_tilford_circular'],
     ['Star', 'layout_star']
 ]
 

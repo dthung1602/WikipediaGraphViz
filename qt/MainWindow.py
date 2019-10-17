@@ -10,6 +10,7 @@ from .AboutUsDialog import AboutUsDialog
 from .CrawlDialog import CrawlDialog
 from .SearchDialog import SearchDialog
 from .StatDialog import StatDialog
+from .Switch import Switch
 
 DEFAULT_GRAPH = 'resource/graph/default.graphml'
 
@@ -49,7 +50,7 @@ class MainWindow(QMainWindow):
         self.crawlMode.stopSignal.connect(self.handleStop)
         self.crawlMode.pauseSignal.connect(self.handlePause)
         self.crawlMode.resumeSignal.connect(self.handleResume)
-        self.crawlMode.newVerticesSignal.connect(lambda *args: self.canvas.notifyNewVertices)
+        self.crawlMode.newVerticesSignal.connect(self.canvas.notifyNewVertices)
 
         defaultModes = [
             self.darkMode,
@@ -65,6 +66,7 @@ class MainWindow(QMainWindow):
         self.resumeAction = self.pauseAction = self.stopAction = self.startAction = None
         self.statDialog = self.crawlSettingDialog = self.searchDialog = None
         self.status = self.timeElapsed = None
+        self.liveUpdateSwitch = self.showUnvisitedSwitch = None
         self.startBtn = self.stopBtn = self.pauseBtn = self.resumeBtn = None
         self.fromLineEdit = self.toLineEdit = None
         self.absoluteRadio = self.relativeRadio = self.clusterLabel = self.pageInfo = self.pageSummary = None
@@ -172,6 +174,13 @@ class MainWindow(QMainWindow):
 
         self.status = self.findChild(QLabel, 'status')
         self.timeElapsed = self.findChild(QLineEdit, 'timeElapsed')
+
+        self.liveUpdateSwitch = Switch(self.findChild(QLabel, 'liveUpdateContainer'))
+        self.liveUpdateSwitch.toggled.connect(self.handleLiveUpdateChange)
+        self.liveUpdateSwitch.setChecked(True)
+        self.showUnvisitedSwitch = Switch(self.findChild(QLabel, 'showUnvisitedContainer'))
+        self.showUnvisitedSwitch.toggled.connect(self.handleShowUnvisitedChange)
+        self.showUnvisitedSwitch.setChecked(True)
 
         self.pageInfo = self.findChild(QWidget, 'pageInfo')
         self.pageInfo.setVisible(False)
@@ -340,6 +349,15 @@ class MainWindow(QMainWindow):
     def handleRelativeRadioChange(self, selected):
         self.absoluteRadio.setChecked(not selected)
         self.relativeRadio.setChecked(selected)
+
+    def handleShowUnvisitedChange(self, value):
+        self.canvas.showUnvisited = value
+        self.canvas.update()
+
+    def handleLiveUpdateChange(self, value):
+        self.canvas.liveUpdate = value
+        if value:
+            self.canvas.update()
 
     @staticmethod
     def handleAboutUs():

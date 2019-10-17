@@ -62,6 +62,7 @@ class Canvas(QWidget):
             QLineF(0, height, 0, 0)
         ]
 
+        self.liveUpdate = self.showUnvisited = True
         self.center = self.zoom = None
         self.selectedEdges = self.selectedVertices = []
         self.viewRect = self.verticesToDraw = self.edgesToDraw = None
@@ -104,10 +105,11 @@ class Canvas(QWidget):
         self.resetViewRect()
         self.update()
 
-    def notifyNewVertices(self, ):
-        for mode in self.modes:
-            if mode.onNewVerticesAdded():
-                break
+    def notifyNewVertices(self):
+        if self.liveUpdate:
+            for mode in self.modes:
+                if mode.onNewVerticesAdded():
+                    break
         self.update()
 
     def saveGraph(self, fileName, saveDetails=False):
@@ -216,10 +218,6 @@ class Canvas(QWidget):
         viewRectY = self.center.y() - viewRectHeight / 2
         self.viewRect = QRectF(viewRectX, viewRectY, viewRectWidth, viewRectHeight)
 
-        def inScreen(edge):
-            return self.SCREEN_RECT.contains(self.g.vs[edge.source]['pos']) \
-                   or self.SCREEN_RECT.contains(self.g.vs[edge.target]['pos'])
-
         self.g.vs['pos'] = [QPointF(
             self.toScaledX(v['x']),
             self.toScaledY(v['y'])
@@ -230,11 +228,24 @@ class Canvas(QWidget):
             self.g.vs[e.target]['pos'],
         ) for e in self.g.es]
 
-        self.verticesToDraw = [v for v in self.g.vs if self.viewRect.contains(v['x'], v['y'])]
+        def shouldDrawVertex(v):
+            if not self.showUnvisited and not v['visited']:
+                return False
+            return self.viewRect.contains(v['x'], v['y'])
 
-        linesInScreen = {e for e in self.g.es if inScreen(e)}
-        linesIntersectScreen = {e for e in self.g.es if e['line'].intersects(self.SCREEN_RECT)}
-        self.edgesToDraw = list(linesInScreen.union(linesIntersectScreen))
+        self.verticesToDraw = [v for v in self.g.vs if shouldDrawVertex(v)]
+
+        index = set(v.index for v in self.verticesToDraw)
+
+        def shouldDrawEdge(e):
+            s, t, vs = e.source, e.target, self.g.vs
+            if not (s in index or t in index):
+                return False
+            if not self.showUnvisited and not vs[t]['visited']:
+                return False
+            return True
+
+        self.edgesToDraw = [e for e in self.g.es if shouldDrawEdge(e)]
 
         for mode in self.modes:
             if mode.onUpdateViewRect():

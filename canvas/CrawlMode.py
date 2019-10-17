@@ -5,12 +5,13 @@ from threading import Thread, Lock
 from time import time, sleep
 
 import wikipedia
-from PyQt5.QtCore import pyqtSignal, QObject
-from PyQt5.QtGui import QColor
+from PyQt5.QtCore import pyqtSignal, QObject, QPointF
+from PyQt5.QtGui import QColor, QPainterPath
 from igraph import Graph
 from wikipedia.exceptions import WikipediaException
 
 from .Mode import Mode
+from .ViewMode import ViewMode
 
 WHITE = QColor(255, 255, 255)
 
@@ -134,6 +135,11 @@ class CrawlMode(Mode, QObject):
         self.status = 'running'
         self.pauseLock.release()
 
+    def getViewMode(self):
+        for mode in self.canvas.modes:
+            if isinstance(mode, ViewMode):
+                return mode
+
     def crawl(self):
         g = self.canvas.g
 
@@ -170,14 +176,15 @@ class CrawlMode(Mode, QObject):
             g['category'].update(page.categories)
 
             # add edges from newly visited vertex
+            lineColor = self.getViewMode().lineColor
             for link in page.links:
                 otherVertexIndex = g['title'].get(link)
                 if otherVertexIndex is not None:  # to old vertices
-                    g.add_edge(visitedIndex, otherVertexIndex, color=WHITE)
+                    g.add_edge(visitedIndex, otherVertexIndex, color=lineColor, line=QPainterPath())
                 else:  # to new vertices
                     g.add_vertex(**self.createVertexInitAttr(link))
                     i = g.vcount() - 1
-                    g.add_edge(visitedIndex, i, color=WHITE)
+                    g.add_edge(visitedIndex, i, color=lineColor, line=QPainterPath())
                     g['title'][link] = i
 
             # add to crawl
@@ -200,6 +207,7 @@ class CrawlMode(Mode, QObject):
             self.pauseLock.release()
 
             # update canvas after handle pause / resume for smoother behavior
+            self.newVerticesSignal.emit(None)
             startTime = time()
             self.timeElapsed += time() - startTime
 
@@ -208,9 +216,10 @@ class CrawlMode(Mode, QObject):
 
     def createVertexInitAttr(self, page):
         g = self.canvas.g
+        viewMode = self.getViewMode()
         visited = isinstance(page, wikipedia.WikipediaPage)
         attrs = {
-            'color': WHITE,
+            'color': viewMode.visitedPageColor if visited else viewMode.unvisitedPageColor,
             'visited': visited
         }
         if visited:
@@ -226,6 +235,10 @@ class CrawlMode(Mode, QObject):
                 'links': [],
                 'x': self.canvas.WIDTH / 2,
                 'y': self.canvas.HEIGHT / 2,
+                'pos': QPointF(
+                    self.canvas.toScaledX(self.canvas.WIDTH / 2),
+                    self.canvas.toScaledY(self.canvas.HEIGHT / 2)
+                )
             })
         if visited and g['loadDetails']:
             attrs.update({
