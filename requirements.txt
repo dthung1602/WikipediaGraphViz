@@ -6,6 +6,7 @@ idna==2.8
 kiwisolver==1.1.0
 matplotlib==3.1.1
 numpy==1.17.2
+py-notifier==0.1.0
 pyparsing==2.4.2
 PyQt5==5.13.0
 PyQt5-sip==12.7.0

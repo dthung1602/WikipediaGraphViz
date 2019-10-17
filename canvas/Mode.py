@@ -2,9 +2,8 @@ class Mode:
     conflict_modes = []
     priority = None
 
-    def __init__(self, gui):
-        self.gui = gui
-        self.canvas = gui.canvas
+    def __init__(self, canvas):
+        self.canvas = canvas
 
     def onSet(self):
         pass
@@ -15,7 +14,7 @@ class Mode:
     def onSetGraph(self):
         pass
 
-    def onNewVertexAdded(self, vertex):
+    def onNewVerticesAdded(self):
         pass
 
     def onResetViewRect(self):

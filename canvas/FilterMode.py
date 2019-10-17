@@ -22,8 +22,8 @@ FILTER_VERTEX_OPTIONS = [
 class FilterMode(Mode):
     priority = 3
 
-    def __init__(self, gui):
-        super().__init__(gui)
+    def __init__(self, canvas):
+        super().__init__(canvas)
         self.min = float('-inf')
         self.max = float('inf')
         self.attr = 'pagerank'

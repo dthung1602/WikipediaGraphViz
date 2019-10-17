@@ -3,6 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from igraph import Graph
+from pynotifier import Notification
 
 from canvas import *
 from .AboutUsDialog import AboutUsDialog
@@ -41,6 +42,10 @@ class MainWindow(QMainWindow):
         self.filterMode = FilterMode(self)
         # 99
         self.crawlMode = CrawlMode(self)
+        self.crawlMode.startSignal.connect(self.handleStart)
+        self.crawlMode.stopSignal.connect(self.handleStop)
+        self.crawlMode.pauseSignal.connect(self.handlePause)
+        self.crawlMode.resumeSignal.connect(self.handleResume)
 
         defaultModes = [
             self.darkMode,
@@ -92,13 +97,13 @@ class MainWindow(QMainWindow):
         self.findChild(QAction, 'actionDarkMode').triggered.connect(self.changeViewModeTo(DarkViewMode))
         # Crawl
         self.startAction = self.findChild(QAction, 'actionStartCrawling')
-        self.startAction.triggered.connect(self.handleStart)
+        self.startAction.triggered.connect(lambda: self.crawlMode.start())
         self.stopAction = self.findChild(QAction, 'actionStopCrawling')
-        self.stopAction.triggered.connect(self.handleStop)
+        self.stopAction.triggered.connect(lambda: self.crawlMode.stop())
         self.pauseAction = self.findChild(QAction, 'actionPauseCrawling')
-        self.pauseAction.triggered.connect(self.handlePause)
+        self.pauseAction.triggered.connect(lambda: self.crawlMode.pause())
         self.resumeAction = self.findChild(QAction, 'actionResumeCrawling')
-        self.resumeAction.triggered.connect(self.handleResume)
+        self.resumeAction.triggered.connect(lambda: self.crawlMode.resume())
         self.findChild(QAction, 'actionCrawlSetting').triggered.connect(self.handleCrawlSetting)
         # Tools
         self.findChild(QAction, 'actionFindShortestPath').triggered.connect(self.handleFindShortestPath)
@@ -114,13 +119,13 @@ class MainWindow(QMainWindow):
         self.findChild(QToolButton, 'zoomResetBtn').pressed.connect(self.handleResetZoom)
 
         self.pauseBtn = self.findChild(QToolButton, 'pauseBtn')
-        self.pauseBtn.pressed.connect(self.handlePause)
+        self.pauseBtn.pressed.connect(lambda *args: self.crawlMode.pause())
         self.resumeBtn = self.findChild(QToolButton, 'resumeBtn')
-        self.resumeBtn.pressed.connect(self.handleResume)
+        self.resumeBtn.pressed.connect(lambda *args: self.crawlMode.resume())
         self.startBtn = self.findChild(QToolButton, 'startBtn')
-        self.startBtn.pressed.connect(self.handleStart)
+        self.startBtn.pressed.connect(lambda *args: self.crawlMode.start())
         self.stopBtn = self.findChild(QToolButton, 'stopBtn')
-        self.stopBtn.pressed.connect(self.handleStop)
+        self.stopBtn.pressed.connect(lambda *args: self.crawlMode.stop())
         self.findChild(QToolButton, 'crawlSettingBtn').pressed.connect(self.handleCrawlSetting)
 
         self.findChild(QToolButton, 'showChartsBtn').pressed.connect(self.handleShowCharts)
@@ -180,6 +185,9 @@ class MainWindow(QMainWindow):
 
         self.crawlMode.crawlDoneSignal.connect(self.notifyCrawlDone)
         self.crawlMode.statusUpdatedSignal.connect(self.updateStatus)
+        self.updateInfoMode.updateSummarySignal.connect(self.displayInfo)
+        self.dragAndDropMode.vertexSelectedSignal.connect(self.displayInfo)
+        self.dragAndDropMode.backgroundSelectedSignal.connect(lambda: self.pageInfo.setVisible(False))
 
     def handleNew(self):
         self.canvas.setGraph(Graph(directed=True))
@@ -234,21 +242,19 @@ class MainWindow(QMainWindow):
     def handleResetZoom(self):
         self.canvas.zoomReset()
 
-    def handlePause(self):
+    def handlePause(self, *args):
         self.pauseBtn.setVisible(False)
         self.pauseAction.setEnabled(False)
         self.resumeBtn.setVisible(True)
         self.resumeAction.setEnabled(True)
-        self.crawlMode.pause()
 
-    def handleResume(self):
+    def handleResume(self, *args):
         self.pauseBtn.setVisible(True)
         self.pauseAction.setEnabled(True)
         self.resumeBtn.setVisible(False)
         self.resumeAction.setEnabled(False)
-        self.crawlMode.resume()
 
-    def handleStart(self):
+    def handleStart(self, *args):
         self.pauseBtn.setVisible(True)
         self.pauseAction.setEnabled(True)
         self.resumeBtn.setVisible(False)
@@ -257,9 +263,8 @@ class MainWindow(QMainWindow):
         self.startAction.setEnabled(False)
         self.stopBtn.setVisible(True)
         self.stopAction.setEnabled(True)
-        self.crawlMode.start()
 
-    def handleStop(self):
+    def handleStop(self, *args):
         self.pauseBtn.setVisible(False)
         self.pauseAction.setEnabled(False)
         self.resumeBtn.setVisible(False)
@@ -268,10 +273,9 @@ class MainWindow(QMainWindow):
         self.startAction.setEnabled(True)
         self.stopBtn.setVisible(False)
         self.stopAction.setEnabled(False)
-        self.crawlMode.stop()
 
     def handleCrawlSetting(self):
-        self.crawlSettingDialog = CrawlDialog(self.canvas, self.crawlMode)
+        self.crawlSettingDialog = CrawlDialog(self.crawlMode)
         self.crawlSettingDialog.show()
 
     def handleFindShortestPath(self):
@@ -339,6 +343,7 @@ class MainWindow(QMainWindow):
     def displayInfo(self, info: dict):
         for key, value in info.items():
             if key == 'pageSummary':
+                self.pageInfo.setVisible(True)
                 self.pageSummary.clear()
                 self.pageSummary.insertPlainText(value)
             else:
@@ -360,6 +365,13 @@ class MainWindow(QMainWindow):
         self.resumeBtn.setVisible(False)
         self.startBtn.setVisible(True)
         self.stopBtn.setVisible(False)
+        Notification(
+            title='Wikipedia crawling done!',
+            description=f'Crawling of page {self.crawlMode.startPage} is done after {self.crawlMode.timeElapsedText()}',
+            icon_path='resource/gui/image/wiki-logo.ico',
+            duration=15,
+            urgency=Notification.URGENCY_CRITICAL
+        ).send()
         if self.crawlSettingDialog:
             self.crawlSettingDialog.notifyCrawlDone()
 

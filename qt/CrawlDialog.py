@@ -25,9 +25,8 @@ AVAILABLE_WIKI_LANG = [  # 15 wiki with > 1000000 pages
 
 
 class CrawlDialog(QMainWindow):
-    def __init__(self, canvas, crawlMode):
+    def __init__(self, crawlMode):
         super().__init__()
-        self.canvas = canvas
         self.crawlMode = crawlMode
 
         loadUi('resource/gui/CrawlDialog.ui', self)
@@ -59,25 +58,47 @@ class CrawlDialog(QMainWindow):
         self.findChild(QPushButton, 'randomBtn').pressed.connect(self.handleRandomStartPage)
 
         self.pauseResumeBtn = self.findChild(QPushButton, 'pauseResumeBtn')
-        self.pauseResumeBtn.pressed.connect(self.handlePauseResume)
+        self.pauseResumeBtn.pressed.connect(self.handlePauseResumeBtnClicked)
         self.startStopBtn = self.findChild(QPushButton, 'startStopBtn')
         self.startStopBtn.pressed.connect(self.handleStartStop)
 
+        crawlMode.startSignal.connect(self.handleStart)
+        crawlMode.stopSignal.connect(self.handleStop)
+        crawlMode.pauseSignal.connect(self.handlePause)
+        crawlMode.resumeSignal.connect(self.handleResume)
+
         if crawlMode.status == 'running':
-            self.pauseResumeBtn.setDisabled(False)
+            self.pauseResumeBtn.setVisible(True)
             self.startStopBtn.setText('Stop')
             self.pauseResumeBtn.setText('Pause')
             self.enableEdit(False)
         elif crawlMode.status in ['stopped', 'done']:
             self.startStopBtn.setText('Start')
             self.pauseResumeBtn.setText('Pause')
-            self.pauseResumeBtn.setDisabled(True)
+            self.pauseResumeBtn.setVisible(False)
             self.enableEdit(True)
         else:  # paused
             self.startStopBtn.setText('Stop')
             self.pauseResumeBtn.setText('Resume')
-            self.pauseResumeBtn.setDisabled(False)
+            self.pauseResumeBtn.setVisible(True)
             self.enableEdit(False)
+
+        self.languageComboBox.setCurrentIndex([opt[1] for opt in AVAILABLE_WIKI_LANG].index(crawlMode.language))
+        self.delay.setText(str(crawlMode.delay))
+        if crawlMode.searchAlgo == 'BFS':
+            self.bfsRadio.setChecked(True)
+        elif crawlMode.searchAlgo == 'DFS':
+            self.dfsRadio.setChecked(True)
+        else:
+            self.randomRadio.setChecked(True)
+        self.loadDetails.setChecked(crawlMode.loadDetails)
+        self.startPage.setText(crawlMode.startPage)
+        for lineEditName in ['reachPage', 'maxPage', 'maxDepth', 'timeLimit']:
+            value = getattr(crawlMode, lineEditName)
+            checkBoxName = lineEditName + 'CheckBox'
+            getattr(self, checkBoxName).setChecked(value is not None)
+            if value is not None:
+                getattr(self, lineEditName).setText(str(value))
 
     def handleRadioChange(self, radioName):
         def func(value):
@@ -98,15 +119,34 @@ class CrawlDialog(QMainWindow):
 
         return func
 
+    def enableEdit(self, value):
+        for attr in []:
+            getattr(self, attr).setDisabled(value)
+
     def handleRandomStartPage(self):
         self.startPage.setText(wikipedia.random())
 
-    def handlePauseResume(self):
+    def handlePause(self, *args):
+        self.pauseResumeBtn.setText('Resume')
+
+    def handleResume(self, *args):
+        self.pauseResumeBtn.setText('Pause')
+
+    def handleStart(self, *args):
+        self.pauseResumeBtn.setVisible(True)
+        self.startStopBtn.setText('Stop')
+        self.pauseResumeBtn.setText('Pause')
+        self.enableEdit(False)
+
+    def handleStop(self, *args):
+        self.startStopBtn.setText('Start')
+        self.pauseResumeBtn.setVisible(False)
+        self.enableEdit(True)
+
+    def handlePauseResumeBtnClicked(self):
         if self.crawlMode.status == 'running':
-            self.pauseResumeBtn.setText('Resume')
             self.crawlMode.pause()
         else:
-            self.pauseResumeBtn.setText('Pause')
             self.crawlMode.resume()
 
     def floatOrDefault(self, attrName, defaultValue=None):
@@ -123,10 +163,6 @@ class CrawlDialog(QMainWindow):
             getattr(self, attrName).setText(str(defaultValue))
             return defaultValue
         return value
-
-    def enableEdit(self, value):
-        for attr in []:
-            getattr(self, attr).setDisabled(value)
 
     def handleStartStop(self):
         if self.crawlMode.status in ['stopped', 'done']:
@@ -149,17 +185,10 @@ class CrawlDialog(QMainWindow):
 
             self.crawlMode.setCrawlSetting(**settings)
             self.crawlMode.start()
-            self.pauseResumeBtn.setDisabled(False)
-            self.startStopBtn.setText('Stop')
-            self.pauseResumeBtn.setText('Pause')
-            self.enableEdit(False)
         else:
-            self.startStopBtn.setText('Start')
             self.crawlMode.stop()
-            self.pauseResumeBtn.setDisabled(True)
-            self.enableEdit(True)
 
     def notifyCrawlDone(self):
         self.startStopBtn.setText('Start')
-        self.pauseResumeBtn.setDisabled(True)
+        self.pauseResumeBtn.setVisible(False)
         self.enableEdit(True)

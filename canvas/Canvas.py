@@ -34,8 +34,8 @@ def wrapGraph(graph):
         bind(graph, func)
 
     graph['category'] = set()
-    graph['title'] = set()
-    graph['pageid'] = set()
+    graph['title'] = dict()
+    graph['pageid'] = dict()
     graph['loadDetails'] = True
 
     return graph
@@ -104,15 +104,17 @@ class Canvas(QWidget):
         self.resetViewRect()
         self.update()
 
-    def notifyNewVertex(self, ):
-        vertex = self.g.vs[self.g.vcount() - 1]
+    def notifyNewVertices(self, ):
         for mode in self.modes:
-            if mode.onNewVertexAdded(vertex):
+            if mode.onNewVerticesAdded():
                 break
         self.update()
 
     def saveGraph(self, fileName):
         g = self.g.copy()
+        del g['title']
+        del g['category']
+        del g['pageid']
         del g.vs['pos']
         del g.es['line']
         g.vs['color'] = [c.name() for c in g.vs['color']]
@@ -164,7 +166,6 @@ class Canvas(QWidget):
 
         self.center = QPointF(self.WIDTH / 2, self.HEIGHT / 2)
         self.zoom = 1
-        self.selectedEdges = self.selectedVertices = []
 
         self.updateViewRect()
 

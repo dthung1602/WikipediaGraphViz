@@ -11,8 +11,8 @@ LAYOUT_OPTIONS = [
     ['Large Graph', 'layout_lgl'],
     ['MDS', 'layout_mds'],
     ['Random', 'layout_random'],
-    ['Reingold-Tilford', 'layout_reingold_tilford'],
-    ['Reingold-Tilford Circular', 'layout_reingold_tilford_circular'],
+    # ['Reingold-Tilford', 'layout_reingold_tilford'],
+    # ['Reingold-Tilford Circular', 'layout_reingold_tilford_circular'],
     ['Star', 'layout_star']
 ]
 
@@ -20,8 +20,8 @@ LAYOUT_OPTIONS = [
 class LayoutMode(Mode):
     priority = 2
 
-    def __init__(self, gui):
-        super().__init__(gui)
+    def __init__(self, canvas):
+        super().__init__(canvas)
         self.layoutName = 'layout_circle'
         self.initXY = None
 
@@ -46,7 +46,7 @@ class LayoutMode(Mode):
 
         self.applyLayout()
 
-    def onNewVertexAdded(self, vertex):
+    def onNewVerticesAdded(self):
         self.applyLayout()
 
     def onResetViewRect(self):

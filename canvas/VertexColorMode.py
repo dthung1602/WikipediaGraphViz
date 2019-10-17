@@ -30,8 +30,8 @@ CLUSTERING_ALGO_OPTIONS = [
 class VertexColorMode(Mode):
     priority = 3
 
-    def __init__(self, gui):
-        super().__init__(gui)
+    def __init__(self, canvas):
+        super().__init__(canvas)
         self.enable = True
         self.relative = True
         self.method = 'pagerank'
@@ -45,12 +45,12 @@ class VertexColorMode(Mode):
         g = self.canvas.g
         for mode in self.canvas.modes:
             if isinstance(mode, ViewMode):
-                g.vs['color'] = [mode.foregroundLineColor] * g.vcount()
+                g.vs['color'] = [mode.lineColor] * g.vcount()
 
     def onSetGraph(self):
         self.applyColor()
 
-    def onNewVertexAdded(self, vertex):
+    def onNewVerticesAdded(self):
         self.applyColor()
 
     def applyColor(self):

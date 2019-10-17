@@ -21,9 +21,14 @@ class CrawlMode(Mode, QObject):
     statusUpdatedSignal = pyqtSignal(object)
     crawlDoneSignal = pyqtSignal(object)
 
-    def __init__(self, gui):
+    startSignal = pyqtSignal(object)
+    stopSignal = pyqtSignal(object)
+    pauseSignal = pyqtSignal(object)
+    resumeSignal = pyqtSignal(object)
+
+    def __init__(self, canvas):
         QObject.__init__(self)
-        Mode.__init__(self, gui)
+        Mode.__init__(self, canvas)
 
         self.terminate = False
         self.crawlThread = self.pauseLock = None
@@ -87,33 +92,43 @@ class CrawlMode(Mode, QObject):
             return True
         return False
 
+    def createNewGraph(self):
+        g = Graph(directed=True)
+        self.canvas.setGraph(g)
+        g['loadDetails'] = self.loadDetails
+        g['title'][self.startPage] = 0
+        g.add_vertex(**self.createVertexInitAttr(self.startPage))
+
     def start(self):
+        self.startSignal.emit(None)
         if self.startPage is None:
             self.startPage = wikipedia.random()
-        self.toCrawl = deque([self.startPage])
+        self.toCrawl = deque([0])
         wikipedia.set_lang(self.language)
 
         self.status = 'running'
         self.timeElapsed = 0
         self.terminate = False
         self.pauseLock = Lock()
-        self.canvas.setGraph(Graph(directed=True))
-        self.canvas.g['loadDetails'] = self.loadDetails
+        self.createNewGraph()
         self.crawlThread = Thread(target=self.crawl, daemon=False)
         self.crawlThread.start()
 
     def stop(self):
+        self.stopSignal.emit(None)
         self.status = 'stopped'
         self.terminate = True
-        if self.pauseLock.locked():
+        if self.pauseLock and self.pauseLock.locked():
             self.pauseLock.release()
         self.crawlThread.join()
 
     def pause(self):
+        self.pauseSignal.emit(None)
         self.status = 'paused'
         self.pauseLock.acquire()
 
     def resume(self):
+        self.resumeSignal.emit(None)
         self.status = 'running'
         self.pauseLock.release()
 
@@ -129,10 +144,8 @@ class CrawlMode(Mode, QObject):
                 if len(self.toCrawl) == 0:
                     self.terminate = True
                     break
-                pageTitle = self.toCrawl.popleft()
-                print(g['title'])
-                while pageTitle in g['title']:
-                    pageTitle = self.toCrawl.popleft()
+                visitedIndex = self.toCrawl.popleft()
+                pageTitle = g.vs[visitedIndex]['title']
                 print('>> ' + pageTitle)
                 try:
                     page = wikipedia.page(pageTitle, preload=self.loadDetails)
@@ -141,32 +154,35 @@ class CrawlMode(Mode, QObject):
                 except (WikipediaException, KeyError) as e:
                     print(e)
 
-            # crawling usually take a long time
+            # crawling usually takes a long time
             # -> terminate signal may come
             # -> terminate for smooth behaviour
             if self.terminate:
                 break
 
-            # add vertex and edge
-            g.add_vertex(
-                page=page,
-                x=self.canvas.WIDTH / 2,
-                y=self.canvas.HEIGHT / 2,
-                color=WHITE
-            )
-            newVertexIndex = g.vcount() - 1
-            for v in g.vs:
-                if v.index != newVertexIndex and page.title in v['links']:
-                    g.add_edge(v.index, newVertexIndex, color=WHITE)
-            for v in g.vs:
-                if v.index != newVertexIndex and v['title'] in page.links:
-                    g.add_edge(newVertexIndex, v.index, color=WHITE)
+            # add vertices and edges
+            vertex = g.vs[visitedIndex]
+            vertex.update_attributes(**self.createVertexInitAttr(page))
+            g['title'][page.title] = visitedIndex
+            g['pageid'][page.pageid] = visitedIndex
+            g['category'].update(page.categories)
+
+            # add edges from newly visited vertex
+            for link in page.links:
+                otherVertexIndex = g['title'].get(link)
+                if otherVertexIndex is not None:  # to old vertices
+                    g.add_edge(visitedIndex, otherVertexIndex, color=WHITE)
+                else:  # to new vertices
+                    g.add_vertex(**self.createVertexInitAttr(link))
+                    i = g.vcount() - 1
+                    g.add_edge(visitedIndex, i, color=WHITE)
+                    g['title'][link] = i
 
             # add to crawl
-            if self.searchAlgo == 'DFS':
-                self.toCrawl.extendleft(page.links[::-1])
+            if self.searchAlgo == 'BFS':
+                self.toCrawl.extend(range(visitedIndex + 1, g.vcount()))
             else:
-                self.toCrawl.extend(page.links)
+                self.toCrawl.extendleft(range(g.vcount(), visitedIndex + 1, -1))
                 if self.searchAlgo == 'RAND':
                     # randomly swap 1st element to somewhere
                     i = randrange(0, len(self.toCrawl))
@@ -183,8 +199,47 @@ class CrawlMode(Mode, QObject):
 
             # update canvas after handle pause / resume for smoother behavior
             startTime = time()
-            self.canvas.notifyNewVertex()
+            self.canvas.notifyNewVertices()
             self.timeElapsed += time() - startTime
 
         self.status = 'done'
         self.crawlDoneSignal.emit('done')
+
+    def createVertexInitAttr(self, page):
+        g = self.canvas.g
+        visited = isinstance(page, wikipedia.WikipediaPage)
+        attrs = {
+            'color': WHITE,
+            'visited': visited
+        }
+        if visited:
+            attrs.update({
+                'title': page.title,
+                'pageid': page.pageid,
+                'links': page.links
+            })
+        else:
+            attrs.update({
+                'title': page,
+                'pageid': '--',
+                'links': [],
+                'x': self.canvas.WIDTH / 2,
+                'y': self.canvas.HEIGHT / 2,
+            })
+        if visited and g['loadDetails']:
+            attrs.update({
+                'summary': page.summary,
+                'wordCount': page.summary.replace('\n', ' ').count(' '),
+                'refCount': len(page.references),
+                'imgCount': len(page.images),
+                'catCount': len(page.categories)
+            })
+        else:
+            attrs.update({
+                'summary': 'Summary is not available',
+                'wordCount': 0,
+                'refCount': 0,
+                'imgCount': 0,
+                'catCount': 0,
+            })
+        return attrs

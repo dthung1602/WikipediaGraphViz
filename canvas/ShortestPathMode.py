@@ -4,8 +4,8 @@ from .Mode import Mode
 class ShortestPathMode(Mode):
     priority = 0.9
 
-    def __init__(self, gui):
-        super().__init__(gui)
+    def __init__(self, canvas):
+        super().__init__(canvas)
         self.src = self.dst = None
 
     def reset(self):
@@ -22,7 +22,7 @@ class ShortestPathMode(Mode):
     def onUnset(self):
         self.reset()
 
-    def onNewVertexAdded(self, vertex):
+    def onNewVerticesAdded(self):
         if len(self.canvas.selectedVertices) == 2:
             self.findShortestPath()
 

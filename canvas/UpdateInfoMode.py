@@ -1,48 +1,36 @@
 from math import isnan
 
+from PyQt5.QtCore import pyqtSignal, QObject
+from igraph._igraph import InternalError
 from numpy import argsort, mean
 
 from .Mode import Mode
 
 
-class UpdateInfoMode(Mode):
+class UpdateInfoMode(Mode, QObject):
     priority = 0
+
+    updateSummarySignal = pyqtSignal(object)
+
+    def __init__(self, canvas):
+        QObject.__init__(self)
+        Mode.__init__(self, canvas)
 
     def onSetGraph(self):
         self.recalculate()
 
-    def onNewVertexAdded(self, vertex):
-        g = self.canvas.g
-        page = vertex['page']
-
-        g['pageid'].add(page.pageid)
-        g['title'].add(page.title)
-        vertex['title'] = page.title
-        vertex['pageid'] = page.pageid
-        vertex['links'] = page.links
-
-        if g['loadDetails']:
-            g['category'].update(page.categories)
-            vertex['summary'] = page.summary
-            vertex['wordCount'] = page.summary.replace('\n', ' ').count(' ')
-            vertex['refCount'] = len(page.references)
-            vertex['imgCount'] = len(page.images)
-            vertex['catCount'] = len(page.categories)
-        else:
-            vertex['summary'] = 'Summary is not available'
-            vertex['wordCount'] = 0
-            vertex['refCount'] = 0
-            vertex['imgCount'] = 0
-            vertex['catCount'] = 0
-
-        del vertex['page']
+    def onNewVerticesAdded(self):
         self.recalculate()
 
     def recalculate(self):
         # recalculate
         g = self.canvas.g
         for prop in ['pagerank', 'closeness', 'betweenness', 'evcent']:
-            value = getattr(g, prop)()
+            try:
+                value = getattr(g, prop)()
+            except InternalError as e:
+                value = 0
+                print(e)
             g.vs[prop] = value
             g.vs[prop + 'Relative'] = argsort(value)
 
@@ -71,4 +59,4 @@ class UpdateInfoMode(Mode):
                 'pageCatCount': str(vertex['catCount']),
                 'pageSummary': vertex['summary'],
             })
-        self.gui.displayInfo(info)
+        self.updateSummarySignal.emit(info)

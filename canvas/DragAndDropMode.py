@@ -1,14 +1,18 @@
-from PyQt5.QtCore import QPointF, Qt
+from PyQt5.QtCore import QPointF, Qt, pyqtSignal, QObject
 
 from .Mode import Mode
 
 
-class DragAndDropMode(Mode):
+class DragAndDropMode(Mode, QObject):
     conflict_modes = []
     priority = 1
 
-    def __init__(self, gui):
-        super().__init__(gui)
+    vertexSelectedSignal = pyqtSignal(object)
+    backgroundSelectedSignal = pyqtSignal(object)
+
+    def __init__(self, canvas):
+        QObject.__init__(self)
+        Mode.__init__(self, canvas)
         self.backgroundDragging = None
 
     def onSetGraph(self):
@@ -16,7 +20,7 @@ class DragAndDropMode(Mode):
         self.canvas.selectedEdges = []
 
     def onSelectVertex(self, vertex, event):
-        self.gui.displayInfo({
+        self.vertexSelectedSignal.emit({
             'pageTitle': vertex['title'],
             'pageRank': str(vertex['pagerankRelative']),
             'pageID': str(vertex['pageid']),
@@ -28,14 +32,14 @@ class DragAndDropMode(Mode):
             'pageCatCount': str(vertex['catCount']),
             'pageSummary': vertex['summary'],
         })
+        # self.gui.setPageInfoVisible(True)
         self.canvas.selectedVertices = [vertex]
-        self.gui.setPageInfoVisible(True)
         self.canvas.selectedEdges = []
 
     def onSelectBackground(self, event):
         if event.button() == Qt.LeftButton:
             self.canvas.selectedVertices = []
-            self.gui.setPageInfoVisible(False)
+            self.backgroundSelectedSignal.emit(None)  # .setPageInfoVisible(False)
         elif event.button() == Qt.RightButton:
             self.backgroundDragging = event.pos()
 
