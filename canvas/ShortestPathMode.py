@@ -3,6 +3,7 @@ from .Mode import Mode
 
 class ShortestPathMode(Mode):
     priority = 0.9
+    conflict_modes = ['SearchMode']
 
     def __init__(self, canvas):
         super().__init__(canvas)

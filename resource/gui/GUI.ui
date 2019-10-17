@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1372</width>
+    <width>1368</width>
     <height>710</height>
    </rect>
   </property>
@@ -1318,7 +1318,7 @@ margin-bottom: 10px</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1372</width>
+     <width>1368</width>
      <height>22</height>
     </rect>
    </property>
@@ -1492,10 +1492,16 @@ margin-bottom: 10px</string>
    <property name="text">
     <string>&amp;Find shortest path</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
   </action>
   <action name="actionSearch">
    <property name="text">
     <string>&amp;Search</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
    </property>
   </action>
   <action name="actionShowCharts">

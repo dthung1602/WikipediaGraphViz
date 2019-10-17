@@ -110,15 +110,27 @@ class Canvas(QWidget):
                 break
         self.update()
 
-    def saveGraph(self, fileName):
+    def saveGraph(self, fileName, saveDetails=False):
         g = self.g.copy()
         del g['title']
         del g['category']
         del g['pageid']
         del g.vs['pos']
         del g.es['line']
-        g.vs['color'] = [c.name() for c in g.vs['color']]
-        g.es['color'] = [c.name() for c in g.es['color']]
+        if not saveDetails:
+            del g.es['color']
+            del g.vs['color']
+            del g.vs['x']
+            del g.vs['y']
+            del g.vs['pagerank']
+            del g.vs['pagerankRelative']
+            del g.vs['closeness']
+            del g.vs['closenessRelative']
+            del g.vs['betweenness']
+            del g.vs['betweennessRelative']
+        else:
+            g.vs['color'] = [c.name() for c in g.vs['color']]
+            g.es['color'] = [c.name() for c in g.es['color']]
         g.write_graphml(fileName)
 
     def addMode(self, mode: Mode):

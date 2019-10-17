@@ -8,7 +8,6 @@ COLOR_VERTEX_OPTIONS = [
     ['Pagerank', 'pagerank'],
     ['Closeness', 'closeness'],
     ['Betweenness', 'betweenness'],
-    ['Eigenvector', 'evcent'],
     ['Cluster', 'cluster'],
     ['Out degree', 'outdegree'],
     ['In degree', 'indegree'],
@@ -17,11 +16,9 @@ COLOR_VERTEX_OPTIONS = [
 ]
 
 CLUSTERING_ALGO_OPTIONS = [
-    ['Fast Greedy', 'community_fastgreedy'],
     ['Info Map', 'community_infomap'],
     ['Leading eigenvector', 'community_leading_eigenvector'],
     ['Label Propagation', 'community_label_propagation'],
-    ['Multilevel', 'community_multilevel'],
     ['Edge Betweenness', 'community_edge_betweenness'],
     ['Walktrap', 'community_walktrap']
 ]

@@ -7,8 +7,6 @@ FILTER_VERTEX_OPTIONS = [
     ['Closeness', 'closeness'],
     ['Betweenness (relative)', 'betweennessRelative'],
     ['Betweenness', 'betweenness'],
-    ['Eigenvector (relative)', 'evcentRelative'],
-    ['Eigenvector', 'evcent'],
 
     ['Out degree', 'outdegree'],
     ['In degree', 'indegree'],

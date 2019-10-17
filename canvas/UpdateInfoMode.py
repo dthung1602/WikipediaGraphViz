@@ -25,7 +25,7 @@ class UpdateInfoMode(Mode, QObject):
     def recalculate(self):
         # recalculate
         g = self.canvas.g
-        for prop in ['pagerank', 'closeness', 'betweenness', 'evcent']:
+        for prop in ['pagerank', 'closeness', 'betweenness']:
             try:
                 value = getattr(g, prop)()
             except InternalError as e:

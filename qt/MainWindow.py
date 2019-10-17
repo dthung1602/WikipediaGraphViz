@@ -8,6 +8,7 @@ from pynotifier import Notification
 from canvas import *
 from .AboutUsDialog import AboutUsDialog
 from .CrawlDialog import CrawlDialog
+from .SearchDialog import SearchDialog
 from .StatDialog import StatDialog
 
 DEFAULT_GRAPH = 'resource/graph/default.graphml'
@@ -28,24 +29,27 @@ class MainWindow(QMainWindow):
 
         # Modes
         # 0
-        self.darkMode = DarkViewMode(self)
-        self.grayMode = GrayViewMode(self)
-        self.lightMode = LightViewMode(self)
-        self.updateInfoMode = UpdateInfoMode(self)
+        self.darkMode = DarkViewMode(self.canvas)
+        self.grayMode = GrayViewMode(self.canvas)
+        self.lightMode = LightViewMode(self.canvas)
+        self.updateInfoMode = UpdateInfoMode(self.canvas)
+        # 0.9
+        self.shortestPathMode = ShortestPathMode(self.canvas)
+        self.searchMode = SearchMode(self.canvas)
         # 1
-        self.shortestPathMode = ShortestPathMode(self)
-        self.dragAndDropMode = DragAndDropMode(self)
+        self.dragAndDropMode = DragAndDropMode(self.canvas)
         # 2
-        self.layoutMode = LayoutMode(self)
+        self.layoutMode = LayoutMode(self.canvas)
         # 3
-        self.vertexAttrColorMode = VertexColorMode(self)
-        self.filterMode = FilterMode(self)
+        self.vertexAttrColorMode = VertexColorMode(self.canvas)
+        self.filterMode = FilterMode(self.canvas)
         # 99
-        self.crawlMode = CrawlMode(self)
+        self.crawlMode = CrawlMode(self.canvas)
         self.crawlMode.startSignal.connect(self.handleStart)
         self.crawlMode.stopSignal.connect(self.handleStop)
         self.crawlMode.pauseSignal.connect(self.handlePause)
         self.crawlMode.resumeSignal.connect(self.handleResume)
+        self.crawlMode.newVerticesSignal.connect(lambda *args: self.canvas.notifyNewVertices)
 
         defaultModes = [
             self.darkMode,
@@ -59,7 +63,7 @@ class MainWindow(QMainWindow):
         self.canvas.setGraph(DEFAULT_GRAPH)
 
         self.resumeAction = self.pauseAction = self.stopAction = self.startAction = None
-        self.statDialog = self.crawlSettingDialog = None
+        self.statDialog = self.crawlSettingDialog = self.searchDialog = None
         self.status = self.timeElapsed = None
         self.startBtn = self.stopBtn = self.pauseBtn = self.resumeBtn = None
         self.fromLineEdit = self.toLineEdit = None
@@ -282,7 +286,9 @@ class MainWindow(QMainWindow):
         self.canvas.toggleMode(self.shortestPathMode)
 
     def handleSearch(self):
-        pass
+        self.canvas.addMode(self.searchMode)
+        self.searchDialog = SearchDialog(self.searchMode)
+        self.searchDialog.show()
 
     def handleShowCharts(self):
         self.statDialog = StatDialog(self.canvas)

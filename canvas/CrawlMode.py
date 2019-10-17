@@ -19,6 +19,7 @@ class CrawlMode(Mode, QObject):
     priority = 99
 
     statusUpdatedSignal = pyqtSignal(object)
+    newVerticesSignal = pyqtSignal(object)
     crawlDoneSignal = pyqtSignal(object)
 
     startSignal = pyqtSignal(object)
@@ -120,7 +121,8 @@ class CrawlMode(Mode, QObject):
         self.terminate = True
         if self.pauseLock and self.pauseLock.locked():
             self.pauseLock.release()
-        self.crawlThread.join()
+        if self.crawlThread:
+            self.crawlThread.join()
 
     def pause(self):
         self.pauseSignal.emit(None)
@@ -199,7 +201,6 @@ class CrawlMode(Mode, QObject):
 
             # update canvas after handle pause / resume for smoother behavior
             startTime = time()
-            self.canvas.notifyNewVertices()
             self.timeElapsed += time() - startTime
 
         self.status = 'done'

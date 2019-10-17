@@ -35,5 +35,7 @@ def arrayToSpectrum(arr, relative):
         rgbs = createColors(101)
         minValue = min(arr)
         maxValue = max(arr)
+        if maxValue == minValue:
+            return [QColor(255, 0, 0)] * len(arr)
         step = (maxValue - minValue) / 100.0
-        return [QColor(rgbs[int((value - minValue) / step)]) for value in arr]
+        return [QColor(rgbs[100 - int((value - minValue) / step)]) for value in arr]

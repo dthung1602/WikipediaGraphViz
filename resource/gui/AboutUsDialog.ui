@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>551</width>
-    <height>242</height>
+    <height>305</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,7 +22,7 @@
      <x>20</x>
      <y>10</y>
      <width>511</width>
-     <height>211</height>
+     <height>271</height>
     </rect>
    </property>
    <property name="styleSheet">
@@ -33,7 +33,7 @@ border-radius: 10px;
 padding: 15px;</string>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Wikipedia Graph Viz&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Libraries and Packages include technology are used under MIT License.&lt;/p&gt;&lt;p&gt;Github page: &lt;a href=&quot;https://github.com/dthung1602/WikipediaGraphViz&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/dthung1602/WikipediaGraphViz&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;right&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;© 2019 Duong Thanh Hung&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Wikipedia Graph Viz&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;A desktop application for crawling and visualizing wikipedia page links. &lt;/p&gt;&lt;p&gt;This software is released under MIT License. The Wikipedia logo belongs to Wikipedia.org&lt;/p&gt;&lt;p&gt;Created with the help of: &lt;a href=&quot;https://igraph.org/python/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;python-igraph&lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;https://igraph.org/python/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#000000;&quot;&gt;, &lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;https://igraph.org/python/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;m&lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;https://matplotlib.org/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;atplotlib&lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;https://igraph.org/python/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#000000;&quot;&gt;, &lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;https://numpy.org/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;numpy&lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;https://igraph.org/python/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#000000;&quot;&gt;&amp;amp; &lt;/span&gt;&lt;/a&gt;&lt;a href=&quot;https://pypi.org › project › PyQt5&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;PyQt5&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Visit me at &lt;a href=&quot;https://github.com/dthung1602/WikipediaGraphViz&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Github&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="wordWrap">
     <bool>true</bool>
